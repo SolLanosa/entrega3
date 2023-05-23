@@ -23,14 +23,25 @@ export default class ProductManager {
   }
 
   addProduct(product) {
-    const {title, description, price, thumbnail, code, stock, ...rest} = product;
+    const {title, description, price, thumbnails, code, stock, status, category, ...rest} = product;
 
     if (title === undefined ||
+        typeof title !== 'string' ||
         description === undefined ||
+        typeof description !== 'string' ||
         price === undefined ||
-        thumbnail === undefined ||
+        typeof price !== 'number' ||
+        thumbnails === undefined ||
+        !Array.isArray(thumbnails) ||
         code === undefined ||
-        stock === undefined) {
+        typeof code !== 'string' ||
+        stock === undefined ||
+        typeof stock !== 'number' ||
+        status === undefined ||
+        typeof status !== 'boolean' ||
+        category === undefined ||
+        typeof category !== 'string')
+      {
       throw new Error('Missing required fields');
     }
 
@@ -64,7 +75,7 @@ export default class ProductManager {
   }
 
   updateProduct(id, partialProduct) {
-    if (!Object.keys(partialProduct).every(key => key === 'title' || key === 'description' || key === 'code' || key === 'stock' || key === 'thumbnail' || key === 'price')) {
+    if (!Object.keys(partialProduct).every(key => key === 'title' || key === 'description' || key === 'code' || key === 'stock' || key === 'thumbnails' || key === 'price' || key === 'category' || key === 'status')) {
       throw new Error('Invalid fields')
     }
 

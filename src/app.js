@@ -1,27 +1,13 @@
 import express from 'express';
-import ProductManager from './ProductManager.js';
+import routerProducts from "./routes/products.router.js";
+import routerCarts from './routes/carts.router.js'
+
 
 const app = express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-const productManager = new ProductManager('./products.json')
-
-app.get('/products', (req, res) => {
-  const products = productManager.getProducts()
-  let { limit } = req.query
-  if (!limit) return res.send({ products })
-
-  let productsSlice = products.slice(0, Number(limit))
-  res.send({products:productsSlice})
-});
-
-app.get('/products/:id', (req, res) => {
-  const id = req.params.id;
-  try {
-    const product = productManager.getProductById(Number(id))
-    res.send(product) 
-  } catch(e) {
-    res.status(404).send({error: e.message})
-  }
-})
+app.use("/api/products/", routerProducts)
+app.use("/api/carts/", routerCarts)
 
 app.listen(8080);
