@@ -1,4 +1,6 @@
 import fs from 'fs';
+import ProductManager from '../src/ProductManager.js';
+
 
 export default class CartManager {
   constructor(path) {
@@ -37,7 +39,7 @@ export default class CartManager {
     if (productsSelected) {
       return productsSelected
     } else {
-      throw new Error('Not found')
+      throw new Error('Cart not found')
     }
   }
 

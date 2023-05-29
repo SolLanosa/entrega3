@@ -64,7 +64,7 @@ export default class ProductManager {
     if (foundProduct) {
       return foundProduct;
     } else {
-      throw new Error('Not found')
+      throw new Error('Product not found')
     }
   }
 
