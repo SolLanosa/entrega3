@@ -3,6 +3,7 @@ import fs from 'fs';
 export default class CartManager {
   constructor(path) {
     this.path = path;
+    this.productManager = new ProductManager('./products.json')
   }
 
   getCartsFile() {
@@ -41,26 +42,24 @@ export default class CartManager {
   }
 
   addProductToCart(cid, pid) {
-    const lastId = this.getCartsFile().lastId;
-    const carts = this.getCartsFile().carts;
-    const cartSelected = this.getCartById(cid)
-    let product = cartSelected.products.find((p) => p.product === pid)
-    console.log(product)
-    if (product) {
-      const updatedProducts = cartSelected.products.filter(p => p.product !== pid);
-      updatedProducts.push({ ...product, quantity: product.quantity + 1 })
-      cartSelected.products = updatedProducts
-    } else {
-      product = {
-        product: pid,
-        quantity: 1
+      this.productManager.getProductById(pid)
+      const lastId = this.getCartsFile().lastId;
+      const carts = this.getCartsFile().carts;
+      const cartSelected = this.getCartById(cid)
+      let product = cartSelected.products.find((p) => p.product === pid)
+      if (product) {
+        const updatedProducts = cartSelected.products.filter(p => p.product !== pid);
+        updatedProducts.push({ ...product, quantity: product.quantity + 1 })
+        cartSelected.products = updatedProducts
+      } else {
+        product = {
+          product: pid,
+          quantity: 1
+        }
+        cartSelected.products.push(product)
       }
-      cartSelected.products.push(product)
-    }
-
-    const updatedCarts = carts.filter(cart => cart.id !== cartSelected.id)
-    updatedCarts.push(cartSelected)
-
-    fs.writeFileSync(this.path, JSON.stringify({lastId, carts:updatedCarts}));
+      const updatedCarts = carts.filter(cart => cart.id !== cartSelected.id)
+      updatedCarts.push(cartSelected)
+      fs.writeFileSync(this.path, JSON.stringify({lastId, carts:updatedCarts}));
   }
 }

@@ -34,14 +34,22 @@ router.get('/:pid', (req, res) => {
 router.put('/:pid', (req, res) => {
   const pid = req.params.pid;
   const product = req.body;
-  productManager.updateProduct(Number(pid), product);
-  res.send({ status: "success" });
+  try {
+    productManager.updateProduct(Number(pid), product);
+    res.send({ status: "success" });
+  } catch(e) {
+    res.status(404).send({error: e.message})
+  }
 })
 
 router.delete('/:pid', (req, res) => {
   const pid = req.params.pid;
-  productManager.deleteProduct(Number(pid));
-  res.send({ status: "success" });
+  try {
+    productManager.deleteProduct(Number(pid));
+    res.send({ status: "success" });
+  } catch(e) {
+    res.status(404).send({error: e.message})
+  }
 })
 
 export default router;
