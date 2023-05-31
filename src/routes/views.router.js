@@ -8,7 +8,7 @@ router.get('/realtimeproducts', (req, res) => {
   res.render('realTimeProducts')
 })
 
-router.get('/products', (req, res) => {
+router.get('/', (req, res) => {
   const products = productManager.getProducts()
   res.render('index', {
     products

@@ -47,4 +47,4 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/products/", routerProducts)
 app.use("/api/carts/", routerCarts)
-app.use("/views", viewsRouter)
+app.use("/", viewsRouter)
