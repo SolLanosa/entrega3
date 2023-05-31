@@ -5,7 +5,9 @@ const router = express.Router();
 const productManager = new ProductManager('./products.json')
 
 router.get('/realtimeproducts', (req, res) => {
-  res.render('realTimeProducts')
+  res.render('realTimeProducts', {
+    style: 'realTimeProducts.css'
+  })
 })
 
 router.get('/', (req, res) => {
