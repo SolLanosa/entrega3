@@ -56,7 +56,8 @@ export default class ProductManager {
     }
     const products = this.getProducts();
     products.push(newProduct);
-    fs.writeFileSync(this.path, JSON.stringify({lastId: lastId + 1, products}));
+    fs.writeFileSync(this.path, JSON.stringify({ lastId: lastId + 1, products }));
+    return newProduct;
   }
 
   getProductById(id) {

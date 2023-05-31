@@ -1,0 +1,35 @@
+<div>
+    <table >
+      <thead>
+        <td>Producto</td>
+        <td>Id</td>
+        <td>Precio</td>
+        <td></td>
+      </thead>
+      <tbody id="productsList">
+      </tbody>
+    </table>
+</div>
+<div>
+  <form action="" id="form">
+    <label for="title">Titulo: </label>
+    <input type="text" id="title">
+    <label for="price">Precio: </label>
+    <input type="number" id="price">
+    <label for="descripcion">Descripcion: </label>
+    <input type="text" id="descripcion">
+    <label for="thumbnails">Thumbnails: </label>
+    <input type="text" id="thumbnails">
+    <label for="code">Code: </label>
+    <input type="text" id="code">
+    <label for="status">Status: </label>
+    <input type="text" id="status">
+    <label for="stock">Stock: </label>
+    <input type="number" id="stock">
+    <label for="category">Category: </label>
+    <input type="text" id="category">
+    <button type="submit" id="buttonSubmit">Agregar producto</button>
+  </form>
+</div>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/index.js"></script>
