@@ -3,22 +3,24 @@ const socket = io();
 const productList = document.getElementById("productsList")
 const form = document.getElementById("form")
 
-//cliente emite señal de que elimina un producto
-const onDeleteProduct = (id) => {
-  socket.emit('deleteProduct', id)
+const onDeleteProduct = async (id) => {
+  await fetch(`http://localhost:8080/products/${id}`, {
+    method: 'DELETE'
+  })
 }
 
 const addProductList = (product) => {
   const tr = document.createElement('tr');
-  tr.id = product.id
+  tr.id = product._id
+  console.log(product)
   const td1 = document.createElement('td');
   const td2 = document.createElement('td');
   const td3 = document.createElement('td');
   const td4 = document.createElement('td');
   const button = document.createElement('button');
-  button.addEventListener('click', () => onDeleteProduct(product.id))
+  button.addEventListener('click', () => onDeleteProduct(product._id))
   td1.textContent = product.title
-  td2.textContent = product.id
+  td2.textContent = product._id
   td3.textContent = product.price + '$'
   button.textContent = 'Borrar'
 
@@ -42,7 +44,7 @@ socket.on("products", products => {
 });
 
 //cliente emite señal de que agrega un producto
-form.addEventListener('submit', function(e) {
+form.addEventListener('submit', async function(e) {
   e.preventDefault();
   const inputTitle = document.getElementById("title")
   const inputPrice = document.getElementById("price")
@@ -63,8 +65,13 @@ form.addEventListener('submit', function(e) {
     thumbnails: [inputThumbnails.value],
     status: inputStatus.value === 'true'
   }
+  
+  await fetch(`http://localhost:8080/products`, {
+      method: 'POST',
+      body: JSON.stringify(producto),
+      headers: {'Accept': 'application/json', 'Content-Type': 'application/json' }
+    })
 
-    socket.emit('addProduct', producto);
     inputTitle.value = '';
     inputPrice.value = '';
     inputCode.value  = '';

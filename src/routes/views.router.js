@@ -1,17 +1,18 @@
 import express from 'express';
-import ProductManager from '../ProductManager.js';
+import ProductManager from '../daos/mongodb/ProductManager.js';
 
 const router = express.Router();
-const productManager = new ProductManager('./products.json')
+const productManager = new ProductManager()
 
-router.get('/realtimeproducts', (req, res) => {
+router.get('/realtimeproducts', async (req, res) => {
   res.render('realTimeProducts', {
     style: 'realTimeProducts.css'
   })
 })
 
-router.get('/', (req, res) => {
-  const products = productManager.getProducts()
+router.get('/', async (req, res) => {
+  const products = await productManager.getProducts()
+
   res.render('index', {
     products
   })

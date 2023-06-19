@@ -1,13 +1,13 @@
 import express from 'express';
-import CartManager from '../CartManager.js'
+import CartManager from '../daos/mongodb/CartManager.js';
 
-const cartManager = new CartManager('./carrito.json');
+const cartManager = new CartManager();
 
 const router = express.Router();
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   try {
-    const cart = cartManager.addCart()
+    const cart = await cartManager.addCart()
     res.send(cart);
   }
   catch (e) {
@@ -15,27 +15,37 @@ router.post('/', (req, res) => {
   }
 })
 
-router.get('/:cid', (req, res) => {
+router.get('/:cid', async (req, res) => {
   const cid = req.params.cid;
-  try {
-    const products = cartManager.getCartById(Number(cid)).products
-    res.send(products)
-  } catch(e) {
-    res.status(404).send({error: e.message})
+  let cart = await cartManager.getCartById(cid)
+
+  if (!cart) {
+    res.send("No se encontró el carrito")
   }
+  res.send(cart.products)
 })
 
-router.post('/:cid/product/:pid', (req, res) => {
+router.post('/:cid/product/:pid', async (req, res) => {
   const cid = req.params.cid;
   const pid = req.params.pid;
 
   try {
-    cartManager.addProductToCart(Number(cid), Number(pid))
-    const cart = cartManager.getCartById(Number(cid))
+    await cartManager.addProductToCart(cid, pid)
+    const cart = await cartManager.getCartById(cid)
     res.send(cart)
   } catch (e) {
     res.status(404).send({error: e.message})
   }
 })
+
+router.get('/', async(req, res) => {
+  const carts = await cartManager.getAllCarts()
+
+  if (!carts) {
+    res.send('Carts not found')
+  }
+  res.send(carts)
+})
+
 
 export default router;
