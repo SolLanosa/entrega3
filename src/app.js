@@ -6,21 +6,37 @@ import routerCarts from './routes/carts.router.js';
 import viewsRouter from './routes/views.router.js'
 import { Server } from 'socket.io'
 import ProductManager from "./daos/mongodb/ProductManager.js"
+import MessageManager from "./daos/mongodb/MessageManager.js";
 
 
 const productManager = new ProductManager()
+const messageManager = new MessageManager()
 
 const app = express();
 const httpServer = app.listen(8080, () => {
   console.log("servidor levantado");
 });
+
+const mensajes = [];
+
 const socketServer = new Server(httpServer);
 socketServer.on('connection', async (socket) => {
   console.log('Nuevo cliente conectado ' + socket.id)
 
-  const products = productManager.getProducts()
+  const products = await productManager.getProducts()
+  const messages = await messageManager.getMessages()
   //server emite productos
-  socket.emit('products', await products)
+  socket.emit('products', products)
+  socket.emit('messages', messages)
+
+  socket.on("message", (data) => {
+    messageManager.addMessage(data);
+    socketServer.emit("imprimir", data);
+  });
+
+  socket.on('authenticatedUser', (data) => {
+    socket.broadcast.emit('newUserAlert', data)
+  })
 })
 
 app.engine('handlebars', handlebars.engine())
@@ -41,4 +57,5 @@ app.use((req, res, next) => {
 app.use("/", viewsRouter)
 app.use("/products/", routerProducts)
 app.use("/carts/", routerCarts)
+app.use("/chat", viewsRouter)
 

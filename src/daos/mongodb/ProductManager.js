@@ -15,14 +15,12 @@ export default class ProductManager {
   }
 
   async getProductById(id) {
-  
     let result = await productsModel.findOne({ _id: id });
     if (result) {
       return result
     } else {
       throw new Error("product not found")
     }
-   
   }
 
   async updateProduct(id, updatedProduct) {

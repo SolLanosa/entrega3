@@ -65,7 +65,7 @@ form.addEventListener('submit', async function(e) {
     thumbnails: [inputThumbnails.value],
     status: inputStatus.value === 'true'
   }
-  
+
   await fetch(`http://localhost:8080/products`, {
       method: 'POST',
       body: JSON.stringify(producto),
