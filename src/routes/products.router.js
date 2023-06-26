@@ -6,8 +6,14 @@ const productManager = new ProductManager()
 const router = express.Router();
 
 router.get('/', async (req, res) => {
-  const products = await productManager.getProducts()
-  res.send({ products });
+  let limit = Number(req.query.limit) || 10;
+  let page = Number(req.query.page)  || 1;
+  let sort = Number(req.query.sort)  || 0;
+  let filtro = req.query.filtro || '';
+  let filtroVal = req.query.filtroVal || '';
+
+  const products = await productManager.getProducts(limit, page, sort, filtro, filtroVal)
+  res.send(products);
 })
 
 router.post('/', async (req, res) => {

@@ -4,7 +4,7 @@ const productList = document.getElementById("productsList")
 const form = document.getElementById("form")
 
 const onDeleteProduct = async (id) => {
-  await fetch(`http://localhost:8080/products/${id}`, {
+  await fetch(`http://localhost:8080/api/products/${id}`, {
     method: 'DELETE'
   })
 }
@@ -40,7 +40,7 @@ socket.on('productDeleted', id => {
 
 //cliente escucha los productos
 socket.on("products", products => {
-  products.forEach(addProductList)
+  products.docs.forEach(addProductList)
 });
 
 //cliente emite señal de que agrega un producto
@@ -66,7 +66,7 @@ form.addEventListener('submit', async function(e) {
     status: inputStatus.value === 'true'
   }
 
-  await fetch(`http://localhost:8080/products`, {
+  await fetch(`http://localhost:8080/api/products`, {
       method: 'POST',
       body: JSON.stringify(producto),
       headers: {'Accept': 'application/json', 'Content-Type': 'application/json' }

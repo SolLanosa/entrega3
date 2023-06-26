@@ -1,0 +1,24 @@
+.container-cart {
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  text-align: center;
+}
+
+.container-products-carts {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+}
+
+.product-container {
+  display: flex;
+  border: 1px solid black;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 40%;
+  margin: 20px auto;
+}
+
+.product-container p span {
+  font-weight: bold;
+}

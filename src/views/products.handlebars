@@ -1,0 +1,27 @@
+<div>
+  <h1>Productos</h1>
+  <a class="carrito-button"  href="/carts/{{cart}}">Ver carrito <i class='bx bxs-cart-alt bx-sm'></i></a>
+  <div class="container-products">
+      {{#each products}}
+        <a class="container-card" href="/products/{{this._id}}">
+          <img src={{this.thumbnails}} alt="">
+          <h3>{{this.title}}</h3>
+          <div class="container-price-cart">
+            <span>$ {{this.price}}</span>
+            <button class="add-to-cart">
+              <i class='bx bxs-cart-alt bx-sm'></i>
+            </button>
+          </div>
+        </a>
+      {{/each}}
+  </div>
+  <div class="container-page">
+    {{#if prev}}
+      <a href="/products?page={{prev}}"><i class='bx bxs-left-arrow bx-sm'></i></a>
+    {{/if}}
+    <span>{{page}}/{{totalPages}}</span>
+    {{#if next}}
+      <a href="/products?page={{next}}"><i class='bx bxs-right-arrow bx-sm'></i></a>
+    {{/if}}
+  </div>
+</div>

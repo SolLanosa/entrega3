@@ -9,8 +9,20 @@ export default class ProductManager {
     return result
   }
 
-  async getProducts() {
-    let result = await productsModel.find().lean();
+  async getProducts(limit = 10, page = 1, sort=0, filtro='', filtroVal='') {
+    let whereOptions = {}
+    if (filtro != '' && filtroVal != '') {
+      whereOptions = { [filtro] : filtroVal}
+    }
+
+    let result = await productsModel.paginate(
+      whereOptions,
+      {
+        whereOptions,
+        limit: limit,
+        page: page,
+        sort: { price: sort }
+      });
     return result
   }
 

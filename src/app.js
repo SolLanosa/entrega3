@@ -22,7 +22,6 @@ const mensajes = [];
 const socketServer = new Server(httpServer);
 socketServer.on('connection', async (socket) => {
   console.log('Nuevo cliente conectado ' + socket.id)
-
   const products = await productManager.getProducts()
   const messages = await messageManager.getMessages()
   //server emite productos
@@ -55,7 +54,7 @@ app.use((req, res, next) => {
 })
 
 app.use("/", viewsRouter)
-app.use("/products/", routerProducts)
-app.use("/carts/", routerCarts)
-app.use("/chat", viewsRouter)
+app.use("/api/products/", routerProducts)
+app.use("/api/carts/", routerCarts)
+app.use("/api/chat", viewsRouter)
 

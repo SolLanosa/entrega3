@@ -47,5 +47,53 @@ router.get('/', async(req, res) => {
   res.send(carts)
 })
 
+router.delete('/:cid/products/:pid', async (req, res) => {
+  const cid = req.params.cid;
+  const pid = req.params.pid;
+
+  try {
+    await cartManager.deleteProductFromCart(cid, pid);
+    res.send({ status: "success" });
+  } catch(e) {
+    res.status(404).send({error: e.message})
+  }
+})
+
+router.delete('/:cid', async (req, res) => {
+  const cid = req.params.cid;
+
+  try {
+    await cartManager.deleteAllProductsFromCart(cid);
+    res.send({ status: "success" });
+  } catch(e) {
+    res.status(404).send({error: e.message})
+  }
+})
+
+router.put('/:cid/products/:pid', async (req, res) => {
+  const cid = req.params.cid;
+  const pid = req.params.pid;
+  const quantity = req.body.quantity;
+
+  try {
+    await cartManager.addProductToCart(cid, pid, quantity)
+    res.send({ status: "success" });
+  } catch(e) {
+    res.status(404).send({error: e.message})
+  }
+})
+
+router.put('/:cid', async (req, res) => {
+  const cid = req.params.cid;
+  const productos = req.body;
+
+  try {
+    await cartManager.updateCart(cid, productos)
+    res.send({ status: "success" });
+  } catch(e) {
+    res.status(404).send({error: e.message})
+  }
+
+})
 
 export default router;
