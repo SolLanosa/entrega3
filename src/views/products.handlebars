@@ -1,6 +1,6 @@
 <div>
   <h1>Productos</h1>
-  <a class="carrito-button"  href="/carts/{{cart}}">Ver carrito <i class='bx bxs-cart-alt bx-sm'></i></a>
+  <a class="carrito-button"  href="/carts/648f9b85a6f4620f563343a1">Ver carrito <i class='bx bxs-cart-alt bx-sm'></i></a>
   <div class="container-products">
       {{#each products}}
         <a class="container-card" href="/products/{{this._id}}">
@@ -8,7 +8,7 @@
           <h3>{{this.title}}</h3>
           <div class="container-price-cart">
             <span>$ {{this.price}}</span>
-            <button class="add-to-cart">
+            <button id="button-cart" class="add-to-cart" onclick="addProduct('{{this._id}}')">
               <i class='bx bxs-cart-alt bx-sm'></i>
             </button>
           </div>
@@ -25,3 +25,4 @@
     {{/if}}
   </div>
 </div>
+<script src="/js/products.js"></script>

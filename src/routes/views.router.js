@@ -26,7 +26,6 @@ router.get('/chat',(req,res)=>{
 router.get('/products', async (req, res) => {
   let page = Number(req.query.page)  || 1;
   const products = await productManager.getProducts(10, page)
-  console.log(products)
   res.render('products', {
     products: JSON.parse(JSON.stringify(products.docs)),
     prev: products.prevPage,

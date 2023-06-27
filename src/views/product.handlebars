@@ -1,16 +1,19 @@
-<div>
-  <div>
+<div class="box">
+  <div class="product-box">
     <h1>{{product.title}}</h1>
-    <button class="add-to-cart">
-      <i class='bx bxs-cart-alt bx-sm'></i>
-    </button>
+    <img src="{{product.thumbnails}}" alt="">
     <p>Descripcion: {{product.description}}</p>
-    <p>Categoria: {{product.category}}</p>
-    <p>Precio: {{product.price}}$</p>
-    <p>Stock disponible: {{product.stock}}</p>
-    <p>Codigo: {{product.code}}</p>
-    <p>{{product.thumbnails}}</p>
+    <p class="price">${{product.price}}</p>
+    <p class="category">{{product.category}}</p>
   </div>
-  <a href="/products">volver</a>
+  <div class="button-container">
+    <a class="volver-button" href="/products">Volver</a>
+    <button class="add-to-cart-button"  onclick="addProduct('{{product._id}}')">
+          Agregar producto
+          <i class='bx bxs-cart-alt bx-sm'></i>
+        </button>
+    
+  </div>
 </div>
+<script src="/js/products.js"></script>
 

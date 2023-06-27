@@ -50,7 +50,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use((req, res, next) => {
     req.socketServer = socketServer;
     next()
-
 })
 
 app.use("/", viewsRouter)
