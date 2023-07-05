@@ -7,3 +7,13 @@ async function addProduct(id) {
     console.log('error', e)
   }
 }
+
+async function logout() {
+  fetch('/api/sessions/logout',{
+    method:'GET',
+  }).then(result=>{
+    if(result.status===200){
+        window.location.replace('/login');
+    }
+  })
+}

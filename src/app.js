@@ -4,9 +4,13 @@ import __dirname from "./utils.js";
 import routerProducts from "./routes/products.router.js";
 import routerCarts from './routes/carts.router.js';
 import viewsRouter from './routes/views.router.js'
-import { Server } from 'socket.io'
+import { Server } from 'socket.io';
+import MongoStore from "connect-mongo";
+import session from "express-session"
 import ProductManager from "./daos/mongodb/ProductManager.js"
 import MessageManager from "./daos/mongodb/MessageManager.js";
+import mongoose from "mongoose";
+import sessionRouter from './routes/session.router.js'
 
 
 const productManager = new ProductManager()
@@ -16,8 +20,6 @@ const app = express();
 const httpServer = app.listen(8080, () => {
   console.log("servidor levantado");
 });
-
-const mensajes = [];
 
 const socketServer = new Server(httpServer);
 socketServer.on('connection', async (socket) => {
@@ -52,8 +54,18 @@ app.use((req, res, next) => {
     next()
 })
 
+app.use(session({
+  store: new MongoStore({
+    mongoUrl: "mongodb+srv://admin:admin123@cluster0.wnbmalb.mongodb.net/ecommerce?retryWrites=true&w=majority",
+  }),
+  secret: 'mongoSecret',
+  resave: true,
+  saveUninitialized: false,
+}))
+
 app.use("/", viewsRouter)
 app.use("/api/products/", routerProducts)
 app.use("/api/carts/", routerCarts)
 app.use("/api/chat", viewsRouter)
+app.use("/api/sessions", sessionRouter )
 
