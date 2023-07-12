@@ -1,4 +1,5 @@
 import express from "express";
+import 'dotenv/config.js'
 import handlebars from "express-handlebars";
 import __dirname from "./utils.js";
 import routerProducts from "./routes/products.router.js";
@@ -11,7 +12,13 @@ import ProductManager from "./daos/mongodb/ProductManager.js"
 import MessageManager from "./daos/mongodb/MessageManager.js";
 import mongoose from "mongoose";
 import sessionRouter from './routes/session.router.js'
+import passport from 'passport'
+import { githubPassport, intializePassport, loginPassport } from "./config/passport.config.js"
 
+
+const connection = mongoose.connect(
+  "mongodb+srv://admin:admin123@cluster0.wnbmalb.mongodb.net/ecommerce?retryWrites=true&w=majority",
+);
 
 const productManager = new ProductManager()
 const messageManager = new MessageManager()
@@ -49,11 +56,15 @@ app.use(express.static(__dirname+'/public'))
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+
 app.use((req, res, next) => {
     req.socketServer = socketServer;
     next()
 })
 
+intializePassport()
+loginPassport()
+githubPassport()
 app.use(session({
   store: new MongoStore({
     mongoUrl: "mongodb+srv://admin:admin123@cluster0.wnbmalb.mongodb.net/ecommerce?retryWrites=true&w=majority",
@@ -62,6 +73,7 @@ app.use(session({
   resave: true,
   saveUninitialized: false,
 }))
+app.use(passport.initialize())
 
 app.use("/", viewsRouter)
 app.use("/api/products/", routerProducts)

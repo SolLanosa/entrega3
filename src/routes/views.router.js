@@ -72,8 +72,11 @@ router.get('/register', (req, res) => {
 })
 
 router.get('/login', (req, res) => {
-
   res.render('login');
+})
+
+router.get('/restartPassword',(req,res)=>{
+  res.render('restartPassword');
 })
 
 export default router;
