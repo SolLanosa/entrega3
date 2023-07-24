@@ -8,7 +8,7 @@
   </div>
   <div class="button-container">
     <a class="volver-button" href="/products">Volver</a>
-    <button class="add-to-cart-button"  onclick="addProduct('{{product._id}}')">
+    <button class="add-to-cart-button"  onclick="addProduct('{{user.cart}}', '{{product._id}}')">
           Agregar producto
           <i class='bx bxs-cart-alt bx-sm'></i>
         </button>

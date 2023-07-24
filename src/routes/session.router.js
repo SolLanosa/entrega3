@@ -29,7 +29,8 @@ router.post("/login", passport.authenticate('login', {failureRedirect: '/faillog
       last_name: req.user.last_name,
       age: req.user.age,
       email: req.user.email,
-      role: 'usuario'
+      role: 'usuario', 
+      cart: req.user.cart
     }
     res.send({ status: "success", payload:req.user });
   }
@@ -65,6 +66,10 @@ router.get('/logout', (req, res) => {
   })
 })
 
+router.get('/current', (req, res) => {
+  const user = req.session.user;
+  res.send(user)
+})
 
 
 export default router

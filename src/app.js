@@ -13,7 +13,7 @@ import MessageManager from "./daos/mongodb/MessageManager.js";
 import mongoose from "mongoose";
 import sessionRouter from './routes/session.router.js'
 import passport from 'passport'
-import { githubPassport, intializePassport, loginPassport } from "./config/passport.config.js"
+import { initializePassport } from "./config/passport.config.js"
 
 
 const connection = mongoose.connect(
@@ -62,9 +62,7 @@ app.use((req, res, next) => {
     next()
 })
 
-intializePassport()
-loginPassport()
-githubPassport()
+initializePassport()
 app.use(session({
   store: new MongoStore({
     mongoUrl: "mongodb+srv://admin:admin123@cluster0.wnbmalb.mongodb.net/ecommerce?retryWrites=true&w=majority",

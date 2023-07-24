@@ -52,6 +52,7 @@ router.get('/products/:pid', async (req, res) => {
   if (!user) return res.redirect('/login')
   res.render('product', {
     product: JSON.parse(JSON.stringify(product)),
+    user,
     style: 'product.css'
   })
 })
