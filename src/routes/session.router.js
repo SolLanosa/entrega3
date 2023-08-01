@@ -15,7 +15,7 @@ router.get('/failregister', async(req, res) => {
 
 router.post("/login", passport.authenticate('login', {failureRedirect: '/faillogin'}),  async (req, res) => {
   const { email, password } = req.body;
-  if (email === 'adminCoder@coder.com' && password === 'adminCod3r123') {
+  if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
     req.session.user = {
       name: 'Admin', 
       email: email,

@@ -7,6 +7,13 @@ import CartManager from '../daos/mongodb/CartManager.js';
 
 const cartManager = new CartManager();
 
+const USER_ADMIN = {
+    name: 'Admin', 
+    email: process.env.ADMIN_EMAIL,
+    role: 'admin',
+    _id:'admin'
+}
+
 const LocalStrategy = local.Strategy;
 export const initializePassport = () => {
     passport.use('register', new LocalStrategy(
@@ -39,11 +46,16 @@ export const initializePassport = () => {
         
     passport.use('login', new LocalStrategy({usernameField: 'email'}, async (username,password,done) => {
         try{
+            if (username === process.env.ADMIN_EMAIL && password===process.env.ADMIN_PASSWORD) {
+                return done(null, USER_ADMIN)
+            }
+
             const user = await userModel.findOne({email: username})
             if(!user) {
                 console.log("User doesn't exist")
                 return done(null, false);
             }
+           
             if (!isValidPassword(user, password)) return done(null, false);
             console.log(user, 'user login')
             return done(null, user);
@@ -80,7 +92,11 @@ export const initializePassport = () => {
       })
       
     passport.deserializeUser(async (id, done) => {
+        if(id === 'admin') {
+          return done(null, USER_ADMIN);
+        }
         let user = await userModel.findById(id);
         done(null, user);
       })
+      
 }

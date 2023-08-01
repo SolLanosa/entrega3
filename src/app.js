@@ -17,7 +17,7 @@ import { initializePassport } from "./config/passport.config.js"
 
 
 const connection = mongoose.connect(
-  "mongodb+srv://admin:admin123@cluster0.wnbmalb.mongodb.net/ecommerce?retryWrites=true&w=majority",
+  process.env.MONGO_URL,
 );
 
 const productManager = new ProductManager()
@@ -65,7 +65,7 @@ app.use((req, res, next) => {
 initializePassport()
 app.use(session({
   store: new MongoStore({
-    mongoUrl: "mongodb+srv://admin:admin123@cluster0.wnbmalb.mongodb.net/ecommerce?retryWrites=true&w=majority",
+    mongoUrl: process.env.MONGO_URL,
   }),
   secret: 'mongoSecret',
   resave: true,

@@ -3,7 +3,7 @@ import { messagesModel } from "./models/messages.model.js"
 
 
 export default class MessageManager {
-  connection = mongoose.connect("mongodb+srv://admin:admin123@cluster0.wnbmalb.mongodb.net/ecommerce?retryWrites=true&w=majority");
+  connection = mongoose.connect(process.env.MONGO_URL);
 
   async addMessage(messageData) {
     if (!messageData.user || !messageData.message) {
