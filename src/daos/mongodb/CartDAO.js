@@ -1,12 +1,11 @@
 import mongoose from "mongoose";
 import { cartModel } from "./models/carts.model.js";
-import ProductManager from "./ProductManager.js";
+import ProductManager from "./ProductDAO.js";
 
-export default class CartManager {
-  connection = mongoose.connect(process.env.MONGO_URL);
+export default class CartDAO {
   productManager = new ProductManager()
 
-  async addCart() {
+  async createCart() {
     const result = await cartModel.create({ products: [] });
     return result
   }
@@ -37,7 +36,6 @@ export default class CartManager {
     }
 
     await cart.save()
-    return;
   }
 
   async deleteProductFromCart(cid, pid) {
@@ -65,7 +63,6 @@ export default class CartManager {
     }
 
     await cart.save()
-    return;
   }
 
   async deleteAllProductsFromCart(cid) {
@@ -75,7 +72,6 @@ export default class CartManager {
     }
     cart.products = []
     await cart.save()
-    return;
   }
 
   async updateCart(cid, productos) {
@@ -85,7 +81,6 @@ export default class CartManager {
     }
     cart.products = productos;
     await cart.save()
-    return;
   }
 }
 

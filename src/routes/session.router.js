@@ -1,9 +1,10 @@
 import express from 'express';
-import userModel from '../daos/mongodb/models/user.model.js';
-import { createHash, isValidPassword } from '../utils.js';
 import passport from 'passport';
+import {UserDTO} from '../controllers/DTO/user.dto.js'
+import SessionController from '../controllers/session.controller.js';
 
 const router = express.Router();
+const sessionController = new SessionController();
 
 router.post("/register", passport.authenticate('register', {failureRedirect: '/failregister'}), async (req, res) => {
   res.send({ status: "success", message: "usuario  registrado" });
@@ -15,38 +16,20 @@ router.get('/failregister', async(req, res) => {
 
 router.post("/login", passport.authenticate('login', {failureRedirect: '/faillogin'}),  async (req, res) => {
   const { email, password } = req.body;
-  if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
-    req.session.user = {
-      name: 'Admin', 
-      email: email,
-      role: 'admin'
-      }
-      res.send({ status: "success", message: req.session.user });
-  } else {
     if(!req.user) return res.status(400).send({status: 'error', error:'invalid credentials'})
-    req.session.user = {
-      first_name: req.user.first_name,
-      last_name: req.user.last_name,
-      age: req.user.age,
-      email: req.user.email,
-      role: 'usuario', 
-      cart: req.user.cart
-    }
-    res.send({ status: "success", payload:req.user });
-  }
+    req.session.user = req.user
+    const dto = new UserDTO(req.user)
+    res.send({ status: "success", payload:dto });
 });
 
 router.get('/faillogin', (req, res)  => {
   res.send({error: 'Failed Login'})
 })
 
-router.post('/restartPassword',async(req,res)=>{
+router.post('/restartPassword', async(req,res)=>{
   const {email,password} = req.body;
   if(!email||!password) return res.status(400).send({status:"error",error:"Incomplete Values"});
-  const user = await userModel.findOne({email});
-  if(!user) return res.status(404).send({status:"error",error:"Not user found"});
-  const newHashedPassword = createHash(password);
-  await userModel.updateOne({_id:user._id},{$set:{password:newHashedPassword}});
+  sessionController.resetPassword(email, password)
   res.send({status:"success",message:"Contraseña restaurada"});
 })
 
@@ -68,7 +51,8 @@ router.get('/logout', (req, res) => {
 
 router.get('/current', (req, res) => {
   const user = req.session.user;
-  res.send(user)
+  const dto = new UserDTO(user)
+  res.send(dto)
 })
 
 

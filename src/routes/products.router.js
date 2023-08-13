@@ -1,26 +1,24 @@
 import express from 'express';
-import ProductManager from '../daos/mongodb/ProductManager.js';
+import ProductManager from '../daos/mongodb/ProductDAO.js';
+import {rolesMiddleWareAdmin} from '../routes/middlewares/roles.middelware.js'
+import passport from 'passport'
+import ProductController from '../controllers/product.controller.js';
 
-const productManager = new ProductManager()
+const productController = new ProductController()
 
 const router = express.Router();
 
 router.get('/', async (req, res) => {
-  let limit = Number(req.query.limit) || 10;
-  let page = Number(req.query.page)  || 1;
-  let sort = Number(req.query.sort)  || 0;
-  let filtro = req.query.filtro || '';
-  let filtroVal = req.query.filtroVal || '';
-
-  const products = await productManager.getProducts(limit, page, sort, filtro, filtroVal)
+  const products = await productController.getProducts(req)
   res.send(products);
 })
 
-router.post('/', async (req, res) => {
+router.post('/', passport.authenticate('session'), rolesMiddleWareAdmin, async (req, res)  => {
   try {
     const product = req.body;
-    const newProduct = await productManager.addProduct(product);
+    const newProduct = await productController.addProduct(product);
     req.socketServer.sockets.emit('productAdded', newProduct )
+    
     res.send({ status: "success" });
   }
   catch (e) {
@@ -32,28 +30,28 @@ router.post('/', async (req, res) => {
 router.get('/:pid', async (req, res) => {
   const pid = req.params.pid;
   try {
-    const product =  await productManager.getProductById(pid)
+    const product =  await productController.getProductById(pid)
     res.send(product)
   } catch(e) {
     res.status(404).send({error: e.message})
   }
 })
 
-router.put('/:pid', async (req, res) => {
+router.put('/:pid', passport.authenticate('session'), rolesMiddleWareAdmin, async (req, res) => {
   const pid = req.params.pid;
   const product = req.body;
   try {
-    await productManager.updateProduct(pid, product);
+    await productController.updateProduct(pid, product);
     res.send({ status: "success" });
   } catch(e) {
     res.status(404).send({error: e.message})
   }
 })
 
-router.delete('/:pid', async (req, res) => {
+router.delete('/:pid', passport.authenticate('session'), rolesMiddleWareAdmin, async (req, res) => {
   const pid = req.params.pid;
   try {
-    await productManager.deleteProduct(pid);
+    await productController.deleteProduct(pid);
     req.socketServer.sockets.emit('productDeleted', pid )
     res.send({ status: "success" });
   } catch(e) {

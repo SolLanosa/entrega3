@@ -8,16 +8,17 @@ import viewsRouter from './routes/views.router.js'
 import { Server } from 'socket.io';
 import MongoStore from "connect-mongo";
 import session from "express-session"
-import ProductManager from "./daos/mongodb/ProductManager.js"
+import ProductManager from "./daos/mongodb/ProductDAO.js"
 import MessageManager from "./daos/mongodb/MessageManager.js";
 import mongoose from "mongoose";
 import sessionRouter from './routes/session.router.js'
 import passport from 'passport'
 import { initializePassport } from "./config/passport.config.js"
+import { CONFIG } from './config.js'
 
 
 const connection = mongoose.connect(
-  process.env.MONGO_URL,
+  CONFIG.MONGO_URL
 );
 
 const productManager = new ProductManager()
@@ -65,7 +66,7 @@ app.use((req, res, next) => {
 initializePassport()
 app.use(session({
   store: new MongoStore({
-    mongoUrl: process.env.MONGO_URL,
+    mongoUrl: CONFIG.MONGO_URL,
   }),
   secret: 'mongoSecret',
   resave: true,

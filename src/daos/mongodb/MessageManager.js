@@ -3,8 +3,6 @@ import { messagesModel } from "./models/messages.model.js"
 
 
 export default class MessageManager {
-  connection = mongoose.connect(process.env.MONGO_URL);
-
   async addMessage(messageData) {
     if (!messageData.user || !messageData.message) {
       throw new Error("invalid message")

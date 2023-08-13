@@ -1,10 +1,10 @@
 import express from 'express';
-import ProductManager from '../daos/mongodb/ProductManager.js';
-import CartManager from '../daos/mongodb/CartManager.js';
+import ProductManager from '../daos/mongodb/ProductDAO.js';
+import CartDAO from '../daos/mongodb/CartDAO.js';
 
 const router = express.Router();
 const productManager = new ProductManager();
-const cartManager = new CartManager();
+const cartManager = new CartDAO();
 
 router.get('/realtimeproducts', async (req, res) => {
   const user = req.session.user;
@@ -64,6 +64,7 @@ router.get('/carts/:cid', async (req, res) => {
   const products = cart.products
   res.render('carts', {
     products: JSON.parse(JSON.stringify(products)),
+    cart: cid,
     style: 'carts.css'
   })
 })

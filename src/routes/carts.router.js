@@ -1,13 +1,15 @@
 import express from 'express';
-import CartManager from '../daos/mongodb/CartManager.js';
-
-const cartManager = new CartManager();
+import CartController from '../controllers/cart.controller.js';
+import passport from 'passport';
+import { cartOwnerMiddleWare } from './middlewares/roles.middelware.js';
 
 const router = express.Router();
 
+const cartController = new CartController();
+
 router.post('/', async (req, res) => {
   try {
-    const cart = await cartManager.addCart()
+    const cart = await cartController.createCart()
     res.send(cart);
   }
   catch (e) {
@@ -17,7 +19,7 @@ router.post('/', async (req, res) => {
 
 router.get('/:cid', async (req, res) => {
   const cid = req.params.cid;
-  let cart = await cartManager.getCartById(cid)
+  let cart = await cartController.getCartById(cid)
 
   if (!cart) {
     res.send("No se encontró el carrito")
@@ -25,13 +27,16 @@ router.get('/:cid', async (req, res) => {
   res.send(cart.products)
 })
 
-router.post('/:cid/product/:pid', async (req, res) => {
+router.post('/:cid/product/:pid', passport.authenticate('session'), cartOwnerMiddleWare, async (req, res) => {
   const cid = req.params.cid;
   const pid = req.params.pid;
 
   try {
-    await cartManager.addProductToCart(cid, pid)
-    const cart = await cartManager.getCartById(cid)
+    console.log('before add')
+    await cartController.addProductToCart(cid, pid)
+    console.log('after add')
+    const cart = await cartController.getCartById(cid)
+    console.log('after get')
     res.send(cart)
   } catch (e) {
     res.status(404).send({error: e.message})
@@ -39,7 +44,7 @@ router.post('/:cid/product/:pid', async (req, res) => {
 })
 
 router.get('/', async(req, res) => {
-  const carts = await cartManager.getAllCarts()
+  const carts = await cartController.getAllCarts()
 
   if (!carts) {
     res.send('Carts not found')
@@ -47,53 +52,62 @@ router.get('/', async(req, res) => {
   res.send(carts)
 })
 
-router.delete('/:cid/products/:pid', async (req, res) => {
+router.delete('/:cid/products/:pid', passport.authenticate('session'), cartOwnerMiddleWare, async (req, res) => {
   const cid = req.params.cid;
   const pid = req.params.pid;
 
   try {
-    await cartManager.deleteProductFromCart(cid, pid);
+    await cartController.deleteProductFromCart(cid, pid);
     res.send({ status: "success" });
   } catch(e) {
     res.status(404).send({error: e.message})
   }
 })
 
-router.delete('/:cid', async (req, res) => {
+router.delete('/:cid', passport.authenticate('session'), cartOwnerMiddleWare, async (req, res) => {
   const cid = req.params.cid;
 
   try {
-    await cartManager.deleteAllProductsFromCart(cid);
+    await cartController.deleteAllProductsFromCart(cid);
     res.send({ status: "success" });
   } catch(e) {
     res.status(404).send({error: e.message})
   }
 })
 
-router.put('/:cid/products/:pid', async (req, res) => {
+router.put('/:cid/products/:pid', passport.authenticate('session'), cartOwnerMiddleWare, async (req, res) => {
   const cid = req.params.cid;
   const pid = req.params.pid;
   const quantity = req.body.quantity;
 
   try {
-    await cartManager.addProductToCart(cid, pid, quantity)
+    await cartController.addProductToCart(cid, pid, quantity)
     res.send({ status: "success" });
   } catch(e) {
     res.status(404).send({error: e.message})
   }
 })
 
-router.put('/:cid', async (req, res) => {
+router.put('/:cid', passport.authenticate('session'), cartOwnerMiddleWare, async (req, res) => {
   const cid = req.params.cid;
   const productos = req.body;
 
   try {
-    await cartManager.updateCart(cid, productos)
+    await cartController.updateCart(cid, productos)
     res.send({ status: "success" });
   } catch(e) {
     res.status(404).send({error: e.message})
   }
 
+})
+
+router.post('/:cid/purchase', passport.authenticate('session'), cartOwnerMiddleWare, async (req, res) => {
+  try {
+ const missingProducts = await cartController.processPurchase(req.params.cid, req.session.user)
+  res.send({ status: "success" , missingProducts})}
+ catch(e) {
+    res.status(400).send({error: e.message})
+  }
 })
 
 export default router;
