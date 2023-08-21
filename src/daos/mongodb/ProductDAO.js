@@ -1,4 +1,6 @@
-import mongoose from 'mongoose';
+import { CustomError } from '../../services/errors/CustomError.js';
+import EErrors from '../../services/errors/enums.js';
+import { generateProductNotFoundInfo } from '../../services/errors/info.js';
 import { productsModel } from './models/products.model.js';
 
 export default class ProductDAO {
@@ -29,7 +31,12 @@ export default class ProductDAO {
     if (result) {
       return result
     } else {
-      throw new Error("product not found")
+      CustomError.createError({
+        name:"Product fetch error",
+        cause: generateProductNotFoundInfo(id),
+        message: "Product not found",
+        code: EErrors.NOT_FOUND
+      })
     }
   }
 

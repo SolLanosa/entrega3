@@ -1,6 +1,4 @@
-import mongoose from "mongoose";
 import { messagesModel } from "./models/messages.model.js"
-
 
 export default class MessageManager {
   async addMessage(messageData) {

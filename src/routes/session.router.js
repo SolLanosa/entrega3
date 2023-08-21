@@ -2,7 +2,6 @@ import express from 'express';
 import passport from 'passport';
 import {UserDTO} from '../controllers/DTO/user.dto.js'
 import SessionController from '../controllers/session.controller.js';
-
 const router = express.Router();
 const sessionController = new SessionController();
 

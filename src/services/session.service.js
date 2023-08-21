@@ -2,6 +2,9 @@ import CartService from "./cart.service.js";
 import { createHash, isValidPassword } from '../utils.js';
 import UserDao from '../daos/mongodb/UserDAO.js'
 import { CONFIG } from "../config.js";
+import { generateUserErrorInfo } from "./errors/info.js";
+import { CustomError } from "./errors/CustomError.js";
+import EErrors from "./errors/enums.js";
 
 export const USER_ADMIN = {
     name: 'Admin', 
@@ -36,7 +39,6 @@ export default class SessionService {
 
         const user = await this.userDao.findByEmail(username);
         if(!user) {
-            console.log("User doesn't exist")
             return null
         }
         if (!isValidPassword(user, password)) return null

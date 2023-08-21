@@ -7,24 +7,24 @@ const router = express.Router();
 
 const cartController = new CartController();
 
-router.post('/', async (req, res) => {
+router.post('/', async (req, res, next) => {
   try {
     const cart = await cartController.createCart()
     res.send(cart);
   }
   catch (e) {
-    res.status(400).send({error: e.message})
+    next(e)
   }
 })
 
-router.get('/:cid', async (req, res) => {
+router.get('/:cid', async (req, res, next) => {
   const cid = req.params.cid;
-  let cart = await cartController.getCartById(cid)
-
-  if (!cart) {
-    res.send("No se encontró el carrito")
+  try {
+    let cart = await cartController.getCartById(cid)
+    res.send(cart.products)
+  } catch (e) {
+    next(e)
   }
-  res.send(cart.products)
 })
 
 router.post('/:cid/product/:pid', passport.authenticate('session'), cartOwnerMiddleWare, async (req, res) => {
@@ -32,11 +32,8 @@ router.post('/:cid/product/:pid', passport.authenticate('session'), cartOwnerMid
   const pid = req.params.pid;
 
   try {
-    console.log('before add')
     await cartController.addProductToCart(cid, pid)
-    console.log('after add')
     const cart = await cartController.getCartById(cid)
-    console.log('after get')
     res.send(cart)
   } catch (e) {
     res.status(404).send({error: e.message})
@@ -52,7 +49,7 @@ router.get('/', async(req, res) => {
   res.send(carts)
 })
 
-router.delete('/:cid/products/:pid', passport.authenticate('session'), cartOwnerMiddleWare, async (req, res) => {
+router.delete('/:cid/products/:pid', passport.authenticate('session'), cartOwnerMiddleWare, async (req, res, next) => {
   const cid = req.params.cid;
   const pid = req.params.pid;
 
@@ -60,7 +57,7 @@ router.delete('/:cid/products/:pid', passport.authenticate('session'), cartOwner
     await cartController.deleteProductFromCart(cid, pid);
     res.send({ status: "success" });
   } catch(e) {
-    res.status(404).send({error: e.message})
+    next(e)
   }
 })
 

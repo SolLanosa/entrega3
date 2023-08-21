@@ -1,6 +1,9 @@
 import CartRepository from "../repositories/cart.repositories.js";
 import ProductService from './products.service.js'
 import TicketService from './ticket.service.js'
+import { CustomError } from "./errors/CustomError.js"; 
+import EErrors from "./errors/enums.js";
+import { generateCartNotFoundInfo } from "./errors/info.js";
 
 export default class CartService {
     constructor(){
@@ -10,14 +13,29 @@ export default class CartService {
     }
 
     async createCart() {
-        const result = await this.cartRepository.createCart()
-        return result
+        try {
+            const result = await this.cartRepository.createCart()
+            return result
+        } catch(e) {
+            CustomError.createError({
+                name:"Cart creation error",
+                cause: e.message,
+                message: "Error trying to create a cart",
+                code: EErrors.DATABASE_ERROR
+            })
+        }
+       
     }
 
     async getCartById(id) {
         const result = await this.cartRepository.getCartById(id);     
         if(!result) {
-            throw new Error('el cart no exite')
+            CustomError.createError({
+                name:"Cart fetch error",
+                cause: generateCartNotFoundInfo(id),
+                message: "Cart not found",
+                code: EErrors.NOT_FOUND
+            })
         }
         return result
     }
@@ -37,7 +55,12 @@ export default class CartService {
         const product = await this.productService.getProductById(pid);
         const cart = await this.getCartById(cid)
         if(!cart.products.find(p => p.product._id === pid)) {
-            throw new Error('el producto no exite en el carrito')
+            CustomError.createError({
+                name:"Cart fetch error",
+                cause: 'Error',
+                message: "El producto no exite en el carrito",
+                code: EErrors.NOT_FOUND
+            })
         }
         await this.cartRepository.deleteProductFromCart(cart._id.toString(), product._id.toString());
     }
@@ -45,7 +68,12 @@ export default class CartService {
     async deleteAllProductsFromCart(cid) {
         const cart = await this.getCartById(cid)
         if(!cart.products.length === 0) {
-            throw new Error('el carrito esta vacio no hay nada para eliminar')
+            CustomError.createError({
+                name:"Cart fetch error",
+                cause: 'Error',
+                message: "El carrito esta vacio no hay nada para eliminar",
+                code: EErrors.NOT_FOUND
+            })
         }
         await this.cartRepository.deleteAllProductsFromCart(cart._id.toString())
     }

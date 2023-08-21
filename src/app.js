@@ -12,9 +12,11 @@ import ProductManager from "./daos/mongodb/ProductDAO.js"
 import MessageManager from "./daos/mongodb/MessageManager.js";
 import mongoose from "mongoose";
 import sessionRouter from './routes/session.router.js'
+import mockingRouter from './routes/mocking.router.js'
 import passport from 'passport'
 import { initializePassport } from "./config/passport.config.js"
 import { CONFIG } from './config.js'
+import { errorMiddleware } from "./services/middlewares/error.middleware.js";
 
 
 const connection = mongoose.connect(
@@ -73,10 +75,10 @@ app.use(session({
   saveUninitialized: false,
 }))
 app.use(passport.initialize())
-
 app.use("/", viewsRouter)
 app.use("/api/products/", routerProducts)
 app.use("/api/carts/", routerCarts)
 app.use("/api/chat", viewsRouter)
-app.use("/api/sessions", sessionRouter )
-
+app.use("/api/sessions", sessionRouter)
+app.use("/mockingproducts", mockingRouter)
+app.use(errorMiddleware)

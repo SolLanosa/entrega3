@@ -1,4 +1,6 @@
-import mongoose from "mongoose";
+import { CustomError } from "../../services/errors/CustomError.js";
+import EErrors from "../../services/errors/enums.js";
+import { generateCartNotFoundInfo, generateErrorProductNotBeDelete } from "../../services/errors/info.js";
 import { cartModel } from "./models/carts.model.js";
 import ProductManager from "./ProductDAO.js";
 
@@ -43,7 +45,12 @@ export default class CartDAO {
     const cart = await this.getCartById(cid);
 
     if (!cart) {
-      throw new Error("Cart doesn't exist")
+      CustomError.createError({
+        name:"Cart fetch error",
+        cause: generateCartNotFoundInfo(id),
+        message: "Cart not found",
+        code: EErrors.NOT_FOUND
+      })
     }
 
     const proudctInCart = cart.products.find(p => {
@@ -59,7 +66,12 @@ export default class CartDAO {
         return producto.product._id.toString() !== pid
       })
     } else {
-      throw new Error("You can't delete this products. Product doesn't exist")
+      CustomError.createError({
+        name:"Product fetch error",
+        cause: generateErrorProductNotBeDelete(product),
+        message: "Product not found",
+        code: EErrors.NOT_FOUND
+      })
     }
 
     await cart.save()
@@ -68,7 +80,12 @@ export default class CartDAO {
   async deleteAllProductsFromCart(cid) {
     const cart = await this.getCartById(cid);
     if (!cart) {
-      throw new Error("Cart doesn't exist")
+      CustomError.createError({
+        name:"Cart fetch error",
+        cause: generateCartNotFoundInfo(id),
+        message: "Cart not found",
+        code: EErrors.NOT_FOUND
+      })
     }
     cart.products = []
     await cart.save()
@@ -77,7 +94,12 @@ export default class CartDAO {
   async updateCart(cid, productos) {
     const cart = await this.getCartById(cid);
     if (!cart) {
-      throw new Error("Cart doesn't exist")
+      CustomError.createError({
+        name:"Cart fetch error",
+        cause: generateCartNotFoundInfo(id),
+        message: "Cart not found",
+        code: EErrors.NOT_FOUND
+      })
     }
     cart.products = productos;
     await cart.save()

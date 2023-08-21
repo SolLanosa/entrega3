@@ -1,5 +1,4 @@
 import express from 'express';
-import ProductManager from '../daos/mongodb/ProductDAO.js';
 import {rolesMiddleWareAdmin} from '../routes/middlewares/roles.middelware.js'
 import passport from 'passport'
 import ProductController from '../controllers/product.controller.js';
@@ -8,7 +7,7 @@ const productController = new ProductController()
 
 const router = express.Router();
 
-router.get('/', async (req, res) => {
+router.get('/',  async (req, res) => {
   const products = await productController.getProducts(req)
   res.send(products);
 })
@@ -27,14 +26,16 @@ router.post('/', passport.authenticate('session'), rolesMiddleWareAdmin, async (
   }
 })
 
-router.get('/:pid', async (req, res) => {
+router.get('/:pid', async (req, res, next) => {
   const pid = req.params.pid;
   try {
     const product =  await productController.getProductById(pid)
     res.send(product)
-  } catch(e) {
-    res.status(404).send({error: e.message})
   }
+  catch(e) {
+    next(e)
+  }
+  
 })
 
 router.put('/:pid', passport.authenticate('session'), rolesMiddleWareAdmin, async (req, res) => {
