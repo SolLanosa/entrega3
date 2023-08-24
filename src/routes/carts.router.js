@@ -27,7 +27,7 @@ router.get('/:cid', async (req, res, next) => {
   }
 })
 
-router.post('/:cid/product/:pid', passport.authenticate('session'), cartOwnerMiddleWare, async (req, res) => {
+router.post('/:cid/product/:pid', passport.authenticate('session'), cartOwnerMiddleWare, async (req, res, next) => {
   const cid = req.params.cid;
   const pid = req.params.pid;
 
@@ -36,7 +36,7 @@ router.post('/:cid/product/:pid', passport.authenticate('session'), cartOwnerMid
     const cart = await cartController.getCartById(cid)
     res.send(cart)
   } catch (e) {
-    res.status(404).send({error: e.message})
+    next(e)
   }
 })
 
@@ -61,18 +61,18 @@ router.delete('/:cid/products/:pid', passport.authenticate('session'), cartOwner
   }
 })
 
-router.delete('/:cid', passport.authenticate('session'), cartOwnerMiddleWare, async (req, res) => {
+router.delete('/:cid', passport.authenticate('session'), cartOwnerMiddleWare, async (req, res, next) => {
   const cid = req.params.cid;
 
   try {
     await cartController.deleteAllProductsFromCart(cid);
     res.send({ status: "success" });
   } catch(e) {
-    res.status(404).send({error: e.message})
+    next(e)
   }
 })
 
-router.put('/:cid/products/:pid', passport.authenticate('session'), cartOwnerMiddleWare, async (req, res) => {
+router.put('/:cid/products/:pid', passport.authenticate('session'), cartOwnerMiddleWare, async (req, res, next) => {
   const cid = req.params.cid;
   const pid = req.params.pid;
   const quantity = req.body.quantity;
@@ -81,11 +81,11 @@ router.put('/:cid/products/:pid', passport.authenticate('session'), cartOwnerMid
     await cartController.addProductToCart(cid, pid, quantity)
     res.send({ status: "success" });
   } catch(e) {
-    res.status(404).send({error: e.message})
+    next(e)
   }
 })
 
-router.put('/:cid', passport.authenticate('session'), cartOwnerMiddleWare, async (req, res) => {
+router.put('/:cid', passport.authenticate('session'), cartOwnerMiddleWare, async (req, res, next) => {
   const cid = req.params.cid;
   const productos = req.body;
 
@@ -93,17 +93,17 @@ router.put('/:cid', passport.authenticate('session'), cartOwnerMiddleWare, async
     await cartController.updateCart(cid, productos)
     res.send({ status: "success" });
   } catch(e) {
-    res.status(404).send({error: e.message})
+    next(e)
   }
 
 })
 
-router.post('/:cid/purchase', passport.authenticate('session'), cartOwnerMiddleWare, async (req, res) => {
+router.post('/:cid/purchase', passport.authenticate('session'), cartOwnerMiddleWare, async (req, res, next) => {
   try {
  const missingProducts = await cartController.processPurchase(req.params.cid, req.session.user)
   res.send({ status: "success" , missingProducts})}
  catch(e) {
-    res.status(400).send({error: e.message})
+    next(e)
   }
 })
 

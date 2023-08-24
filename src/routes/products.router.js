@@ -12,17 +12,16 @@ router.get('/',  async (req, res) => {
   res.send(products);
 })
 
-router.post('/', passport.authenticate('session'), rolesMiddleWareAdmin, async (req, res)  => {
+router.post('/', passport.authenticate('session'), rolesMiddleWareAdmin, async (req, res,next)  => {
   try {
     const product = req.body;
-    const newProduct = await productController.addProduct(product);
+    const newProduct = await productController.createProduct(product);
     req.socketServer.sockets.emit('productAdded', newProduct )
     
     res.send({ status: "success" });
   }
   catch (e) {
-    console.log(e)
-    res.status(400).send({error: e.message})
+    next(e)
   }
 })
 
@@ -38,25 +37,25 @@ router.get('/:pid', async (req, res, next) => {
   
 })
 
-router.put('/:pid', passport.authenticate('session'), rolesMiddleWareAdmin, async (req, res) => {
+router.put('/:pid', passport.authenticate('session'), rolesMiddleWareAdmin, async (req, res, next) => {
   const pid = req.params.pid;
   const product = req.body;
   try {
     await productController.updateProduct(pid, product);
     res.send({ status: "success" });
   } catch(e) {
-    res.status(404).send({error: e.message})
+   next(e)
   }
 })
 
-router.delete('/:pid', passport.authenticate('session'), rolesMiddleWareAdmin, async (req, res) => {
+router.delete('/:pid', passport.authenticate('session'), rolesMiddleWareAdmin, async (req, res, next) => {
   const pid = req.params.pid;
   try {
     await productController.deleteProduct(pid);
     req.socketServer.sockets.emit('productDeleted', pid )
     res.send({ status: "success" });
   } catch(e) {
-    res.status(404).send({error: e.message})
+    next(e)
   }
 })
 

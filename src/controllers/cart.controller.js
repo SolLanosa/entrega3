@@ -1,4 +1,7 @@
 import CartService from "../services/cart.service.js";
+import { CustomError } from "../services/errors/CustomError.js";
+import EErrors from "../services/errors/enums.js";
+import { generateMissingId, productsNotExistError } from "../services/errors/info.js";
 
 export default class CartController {
     constructor(){
@@ -12,9 +15,12 @@ export default class CartController {
 
     async getCartById(id){
         if(!id) {
-            return {
-                error: 'debes especificar un id',
-            }
+            CustomError.createError({
+                name: "Missing id",
+                cause: generateMissingId(id),
+                message: "Error trying to get cart by id because id is missing",
+                code: EErrors.NOT_FOUND,
+            })
         }
         const result = await this.cartService.getCartById(id);
         return result
@@ -27,39 +33,54 @@ export default class CartController {
 
     async addProductToCart(cid, pid) {
         if(!cid) {
-            return {
-                error: 'debes especificar un cart id',
-            }
+            CustomError.createError({
+                name: "Missing id",
+                cause: generateMissingId(id),
+                message: "Error trying to get cart by id because id is missing",
+                code: EErrors.NOT_FOUND,
+            })
         }
 
         if(!pid) {
-            return {
-                error: 'debes especificar un product id',
-            }
+            CustomError.createError({
+                name: "Missing id",
+                cause: generateMissingId(id),
+                message: "Product id is missing",
+                code: EErrors.NOT_FOUND,
+            })
         }
         await this.cartService.addProductToCart(cid,pid);
     }
 
     async deleteProductFromCart(cid, pid) {
         if(!cid) {
-            return {
-                error: 'debes especificar un cart id',
-            }
+           CustomError.createError({
+                name: "Missing id",
+                cause: generateMissingId(id),
+                message: "Error trying to get cart by id because id is missing",
+                code: EErrors.NOT_FOUND,
+            })
         }
 
         if(!pid) {
-            return {
-                error: 'debes especificar un product id',
-            }
+            CustomError.createError({
+                name: "Missing id",
+                cause: generateMissingId(id),
+                message: "Product id is missing",
+                code: EErrors.NOT_FOUND,
+            })
         }
         await this.cartService.deleteProductFromCart(cid, pid)
     }
 
     async deleteAllProductsFromCart(cid) {
         if(!cid) {
-            return {
-                error: 'debes especificar un cart id',
-            }
+            CustomError.createError({
+                name: "Missing id",
+                cause: generateMissingId(id),
+                message: "Error trying to get cart by id because id is missing",
+                code: EErrors.NOT_FOUND,
+            })
         }
 
         await this.cartService.deleteAllProductsFromCart(cid)
@@ -67,14 +88,20 @@ export default class CartController {
 
     async updateCart(cid, productos) {
         if(!cid) {
-            return {
-                error: 'debes especificar un cart id',
-            }
+            CustomError.createError({
+                name: "Missing id",
+                cause: generateMissingId(id),
+                message: "Error trying to get cart by id because id is missing",
+                code: EErrors.NOT_FOUND,
+            })
         }
         if (productos.length === 0) {
-            return {
-                error: 'No hay productos'
-            }
+            CustomError.createError({
+                name: "Missing products",
+                cause: productsNotExistError(),
+                message: "Error trying to update cart by id because there is no products",
+                code: EErrors.NOT_FOUND,
+            })
         }
 
         await this.cartService.updateCart(cid, productos);
