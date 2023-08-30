@@ -1,7 +1,7 @@
 import EErrors from "../errors/enums.js";
 
 export const errorMiddleware = (error, req, res, next) => {
-  console.log(error.cause);
+  req.logger.error({route: req.path, body: req.body, params: req.params, error})
   switch (error.code) {
     case EErrors.INVALID_TYPES_ERROR: 
     case EErrors.DATABASE_ERROR:

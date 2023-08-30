@@ -8,11 +8,13 @@ const productController = new ProductController()
 const router = express.Router();
 
 router.get('/',  async (req, res) => {
+  req.logger.http('corriendo GET /products')
   const products = await productController.getProducts(req)
   res.send(products);
 })
 
 router.post('/', passport.authenticate('session'), rolesMiddleWareAdmin, async (req, res,next)  => {
+  req.logger.http('corriendo POST /products')
   try {
     const product = req.body;
     const newProduct = await productController.createProduct(product);
@@ -26,6 +28,7 @@ router.post('/', passport.authenticate('session'), rolesMiddleWareAdmin, async (
 })
 
 router.get('/:pid', async (req, res, next) => {
+  req.logger.http('corriendo GET /products/id')
   const pid = req.params.pid;
   try {
     const product =  await productController.getProductById(pid)
@@ -38,6 +41,7 @@ router.get('/:pid', async (req, res, next) => {
 })
 
 router.put('/:pid', passport.authenticate('session'), rolesMiddleWareAdmin, async (req, res, next) => {
+  req.logger.http('corriendo PUT /products/id')
   const pid = req.params.pid;
   const product = req.body;
   try {
@@ -49,6 +53,7 @@ router.put('/:pid', passport.authenticate('session'), rolesMiddleWareAdmin, asyn
 })
 
 router.delete('/:pid', passport.authenticate('session'), rolesMiddleWareAdmin, async (req, res, next) => {
+  req.logger.http('corriendo DELETE /products/id')
   const pid = req.params.pid;
   try {
     await productController.deleteProduct(pid);

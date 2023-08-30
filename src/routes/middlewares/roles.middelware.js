@@ -7,7 +7,6 @@ export const rolesMiddleWareAdmin = (req, res, next) => {
 }
 
 export const cartOwnerMiddleWare = (req, res, next) => {
-    console.log(req.user)
     if(req.user?.cart?.toString() === req.params.cid) {
         next()
     } else {

@@ -4,5 +4,6 @@ export const CONFIG = {
     ADMIN_PASSWORD: process.env.ADMIN_PASSWORD,
     CLIENT_ID: process.env.CLIENT_ID,
     CLIENT_SECRET: process.env.CLIENT_SECRET,
-    CALLBACK_URL:process.env.CALLBACK_URL
+    CALLBACK_URL:process.env.CALLBACK_URL,
+    ENVIRONMENT: process.env.ENVIRONMENT
 }

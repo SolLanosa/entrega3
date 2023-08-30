@@ -12,7 +12,6 @@ const onDeleteProduct = async (id) => {
 const addProductList = (product) => {
   const tr = document.createElement('tr');
   tr.id = product._id
-  console.log(product)
   const td1 = document.createElement('td');
   const td2 = document.createElement('td');
   const td3 = document.createElement('td');

@@ -17,7 +17,7 @@ import passport from 'passport'
 import { initializePassport } from "./config/passport.config.js"
 import { CONFIG } from './config.js'
 import { errorMiddleware } from "./services/middlewares/error.middleware.js";
-
+import { LEVELS, addLogerMiddelware } from "./logger.config.js";
 
 const connection = mongoose.connect(
   CONFIG.MONGO_URL
@@ -27,6 +27,7 @@ const productManager = new ProductManager()
 const messageManager = new MessageManager()
 
 const app = express();
+
 const httpServer = app.listen(8080, () => {
   console.log("servidor levantado");
 });
@@ -74,6 +75,19 @@ app.use(session({
   resave: true,
   saveUninitialized: false,
 }))
+
+app.use(addLogerMiddelware);
+app.get('/api/loggerTest', (req, res) => {
+
+  const {level, message} =  req.body;
+  if(!LEVELS.includes(level)) {
+    return res.status(400).send({error: "invalid level"})
+  }
+  req.logger[level](message)
+  
+  res.send({message: "Prueba de loggger", log: {level, message}})
+})
+
 app.use(passport.initialize())
 app.use("/", viewsRouter)
 app.use("/api/products/", routerProducts)
