@@ -8,7 +8,7 @@ export default class ProductController {
         this.productService = new ProductService()
     }
 
-    async createProduct(product){
+    async createProduct(product, user){
         if (!product.title || !product.description || !product.code || !product.category || !product.price || !product.thumbnails || !product.stock || !product.status){
             CustomError.createError({
               name: "Product creation error",
@@ -17,7 +17,7 @@ export default class ProductController {
               code: EErrors.INVALID_TYPES_ERROR,
           })
         }
-        const result = await this.productService.createProduct(product)
+        const result = await this.productService.createProduct(product, user)
         return result
     }
 
@@ -45,7 +45,7 @@ export default class ProductController {
         return result
     }
 
-    async updateProduct(id, updatedProduct) {
+    async updateProduct(id, updatedProduct, user) {
         if(!id) {
             CustomError.createError({
                 name: "Missing id",
@@ -54,11 +54,11 @@ export default class ProductController {
                 code: EErrors.NOT_FOUND,
             })
         } 
-        const result = await this.productService.updateProduct(id, updatedProduct);
+        const result = await this.productService.updateProduct(id, updatedProduct, user);
         return result
       }
     
-      async deleteProduct(id) {
+      async deleteProduct(id, user) {
         if(!id) {
             CustomError.createError({
                 name: "Missing id",
@@ -67,7 +67,7 @@ export default class ProductController {
                 code: EErrors.NOT_FOUND,
             })
         }
-        const result = await this.productService.deleteProduct(id)
+        const result = await this.productService.deleteProduct(id, user)
         return result
       }
 }

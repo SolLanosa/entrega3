@@ -14,7 +14,7 @@ export const initializePassport = () => {
             const {first_name, last_name, age} = req.body;
             try {
                const user = await sessionService.register({
-                first_name, last_name, email: username, age, password, role: 'usuario'
+                first_name, last_name, email: username, age, password, role: 'user'
                })
                 return done(null, user || false);
             } catch (error) {

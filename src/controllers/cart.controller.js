@@ -31,7 +31,7 @@ export default class CartController {
         return result
     }
 
-    async addProductToCart(cid, pid) {
+    async addProductToCart(cid, pid, user) {
         if(!cid) {
             CustomError.createError({
                 name: "Missing id",
@@ -49,7 +49,7 @@ export default class CartController {
                 code: EErrors.NOT_FOUND,
             })
         }
-        await this.cartService.addProductToCart(cid,pid);
+        await this.cartService.addProductToCart(cid,pid, user);
     }
 
     async deleteProductFromCart(cid, pid) {

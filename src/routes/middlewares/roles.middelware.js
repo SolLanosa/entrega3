@@ -13,3 +13,11 @@ export const cartOwnerMiddleWare = (req, res, next) => {
         res.send({error: `you don't own the cart`});
     }
 }
+
+export const rolesMiddleWareAdminOrPremium = (req, res, next) => {
+    if(req.user?.role === 'admin' || req.user?.role === 'premium') {
+        next()
+    } else {
+        res.send({error: `you don't have access`});
+    }
+}

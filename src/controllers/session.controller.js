@@ -5,7 +5,11 @@ export default class SessionController {
         this.sessionService = new SessionService()
     }
 
-    resetPassword(email, password) {
-        this.sessionService.restartPassword(email, password)
+    async restartPassword(email) {
+       await this.sessionService.restartPassword(email)
+    }
+
+   async recoverPassword(password, token) {
+       await this.sessionService.recoverPassword(password, token)
     }
 }

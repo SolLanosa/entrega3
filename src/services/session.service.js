@@ -2,8 +2,9 @@ import CartService from "./cart.service.js";
 import { createHash, isValidPassword } from '../utils.js';
 import UserDao from '../daos/mongodb/UserDAO.js'
 import { CONFIG } from "../config.js";
-import { generateUserErrorInfo } from "./errors/info.js";
-import { CustomError } from "./errors/CustomError.js";
+import MailService from "./mail.service.js";
+import {randomBytes} from 'crypto';
+import { CustomError } from "./errors/CustomError.js"; 
 import EErrors from "./errors/enums.js";
 
 export const USER_ADMIN = {
@@ -17,6 +18,7 @@ export default class SessionService {
     constructor() {
         this.userDao = new UserDao()
         this.cartService = new CartService()
+        this.mailService = new MailService()
     }
 
     async register(newUser) {
@@ -41,7 +43,7 @@ export default class SessionService {
         if(!user) {
             return null
         }
-        if (!isValidPassword(user, password)) return null
+        if (!isValidPassword(user.password, password)) return null
         return user 
     }
 
@@ -53,7 +55,8 @@ export default class SessionService {
                 last_name: 'lastName',
                 email: profile.profileUrl, //github no comparte el mail
                 age: 25,
-                password: ''
+                password: '',
+                role: 'user'
             }
             const savedUser = await this.userDao.createUser(newUser);
             return savedUser;
@@ -61,10 +64,46 @@ export default class SessionService {
         return null
     }
 
-    async restartPassword(email, password) {
+    async restartPassword(email) {
         const user = await this.userDao.findByEmail(email);
         if(!user) return null
-        const newHashedPassword = createHash(password);
+        const token = randomBytes(20).toString('hex');
+        const expirationDate = new Date(Date.now() + 3600 * 1000);
+        await this.userDao.setRecoverToken(email, token, expirationDate)
+        await this.mailService.sendRecoverPasswordEmail(email,token)
+    }
+
+    async recoverPassword(newPassword, token) {
+        const user = await this.userDao.findByRecoverPasswordToken(token)
+        if(!user) {
+            CustomError.createError({
+                name:"User not found",
+                cause: 'not found',
+                message: "Error token not found",
+                code: EErrors.NOT_FOUND
+            })
+        }
+
+        const newHashedPassword = createHash(newPassword);
+        if(isValidPassword(user.password, newHashedPassword)) {
+            CustomError.createError({
+                name:"Invalid Password",
+                cause: 'same password',
+                message: "Invalid password: use a new password",
+                code: EErrors.GENERIC_ERROR
+            })
+        }
+        const expirationDate = user.recoverPasswordExpirationDate?.getTime()
+        if (expirationDate <= Date.now()) {
+            CustomError.createError({
+                name:"Expirate token",
+                cause: 'Recover token expired',
+                message: "Time is up, the token has expired",
+                code: EErrors.RECOVER_TOKEN_EXPIRED
+            })
+        }
         await this.userDao.updatePassword(user._id, newHashedPassword)
     }
+
+
 }

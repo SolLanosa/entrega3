@@ -81,4 +81,8 @@ router.get('/restartPassword',(req,res)=>{
   res.render('restartPassword');
 })
 
+router.get('/recoverPassword', (req,res) => {
+  res.render('recoverPassword')
+})
+
 export default router;

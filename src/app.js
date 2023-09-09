@@ -4,6 +4,7 @@ import handlebars from "express-handlebars";
 import __dirname from "./utils.js";
 import routerProducts from "./routes/products.router.js";
 import routerCarts from './routes/carts.router.js';
+import routerUser from './routes/user.router.js'
 import viewsRouter from './routes/views.router.js'
 import { Server } from 'socket.io';
 import MongoStore from "connect-mongo";
@@ -94,5 +95,6 @@ app.use("/api/products/", routerProducts)
 app.use("/api/carts/", routerCarts)
 app.use("/api/chat", viewsRouter)
 app.use("/api/sessions", sessionRouter)
+app.use("/api/users", routerUser)
 app.use("/mockingproducts", mockingRouter)
 app.use(errorMiddleware)

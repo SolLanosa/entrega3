@@ -5,5 +5,8 @@ export const CONFIG = {
     CLIENT_ID: process.env.CLIENT_ID,
     CLIENT_SECRET: process.env.CLIENT_SECRET,
     CALLBACK_URL:process.env.CALLBACK_URL,
-    ENVIRONMENT: process.env.ENVIRONMENT
+    ENVIRONMENT: process.env.ENVIRONMENT,
+    MAILER_EMAIL: process.env.MAILER_EMAIL,
+    MAILER_PASSWORD: process.env.MAILER_PASSWORD,
+    REDIRECT_BASE_URL: process.env.REDIRECT_BASE_URL
 }

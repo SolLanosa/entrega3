@@ -26,9 +26,9 @@ router.get('/faillogin', (req, res)  => {
 })
 
 router.post('/restartPassword', async(req,res)=>{
-  const {email,password} = req.body;
-  if(!email||!password) return res.status(400).send({status:"error",error:"Incomplete Values"});
-  sessionController.resetPassword(email, password)
+  const {email} = req.body;
+  if(!email) return res.status(400).send({status:"error",error:"Incomplete Values"});
+  sessionController.restartPassword(email)
   res.send({status:"success",message:"Contraseña restaurada"});
 })
 
@@ -52,6 +52,17 @@ router.get('/current', (req, res) => {
   const user = req.session.user;
   const dto = new UserDTO(user)
   res.send(dto)
+})
+
+router.post('/recoverPassword', async(req,res, next)=>{
+ try {
+  const {password, token} = req.body;
+  if(!password|| !token) return res.status(400).send({status:"error",error:"Incomplete Values"});
+ await sessionController.recoverPassword(password, token)
+  res.send({status:"success",message:"Contraseña restaurada"});
+ } catch(e) {
+  next(e)
+ }
 })
 
 

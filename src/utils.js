@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt'
 import { faker } from "@faker-js/faker"
 
 export const createHash =(password) => bcrypt.hashSync(password,bcrypt.genSaltSync(10));
-export const isValidPassword = (user, password) =>bcrypt.compareSync(password,user.password);
+export const isValidPassword = (hashedPassword, password) =>bcrypt.compareSync(password,hashedPassword);
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);

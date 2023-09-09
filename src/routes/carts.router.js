@@ -32,7 +32,7 @@ router.post('/:cid/product/:pid', passport.authenticate('session'), cartOwnerMid
   const pid = req.params.pid;
 
   try {
-    await cartController.addProductToCart(cid, pid)
+    await cartController.addProductToCart(cid, pid, req.session.user)
     const cart = await cartController.getCartById(cid)
     res.send(cart)
   } catch (e) {

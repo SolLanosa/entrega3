@@ -45,8 +45,18 @@ export default class CartService {
         return result
     }
 
-    async addProductToCart(cid, pid){
+    async addProductToCart(cid, pid, user){
         const product = await this.productService.getProductById(pid);
+
+        if(user._id.toString() === product.owner?.toString()) {
+            CustomError.createError({
+                name:"User own the product",
+                cause: 'Error',
+                message: "You cant add a product you own to your cart",
+                code: EErrors.GENERIC_ERROR
+            })
+        }
+
         const cart = await this.getCartById(cid)
         await this.cartRepository.addProductToCart(cart._id.toString(), product._id.toString());
     }

@@ -12,7 +12,12 @@ const schema = new mongoose.Schema({
     cart: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'carts'
-    }
+    },
+    recoverPasswordToken: {
+        type: String,  
+        unique: true
+    },
+    recoverPasswordExpirationDate: Date,
 })
 
 const userModel = mongoose.model(collection, schema)
