@@ -19,11 +19,23 @@ import { initializePassport } from "./config/passport.config.js"
 import { CONFIG } from './config.js'
 import { errorMiddleware } from "./services/middlewares/error.middleware.js";
 import { LEVELS, addLogerMiddelware } from "./logger.config.js";
+import swaggerJSDoc from "swagger-jsdoc";
+import swaggerUiExpress from "swagger-ui-express";
 
 const connection = mongoose.connect(
   CONFIG.MONGO_URL
 );
 
+const swaggerOptions = {
+  definition: {
+    openapi: '3.0.1',
+    info: {
+      title: 'documentacion ecommerce',
+      description: 'documentacion del proyecto ecommerce de productos'
+    },
+  },
+  apis: [`${__dirname}/docs/**/*.yaml`]
+}
 const productManager = new ProductManager()
 const messageManager = new MessageManager()
 
@@ -88,6 +100,9 @@ app.get('/api/loggerTest', (req, res) => {
   
   res.send({message: "Prueba de loggger", log: {level, message}})
 })
+
+const specs = swaggerJSDoc(swaggerOptions);
+app.use('/apidocs', swaggerUiExpress.serve, swaggerUiExpress.setup(specs))
 
 app.use(passport.initialize())
 app.use("/", viewsRouter)

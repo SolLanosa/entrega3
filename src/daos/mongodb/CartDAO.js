@@ -26,11 +26,11 @@ export default class CartDAO {
     await this.productManager.getProductById(pid);
     const cart = await this.getCartById(cid);
     const cartProduct = cart.products.find(p => {
-      return p.product._id.toString() === pid
+      return p.product?._id.toString() === pid
     })
     if (cartProduct) {
       cart.products = cart.products.filter(producto => {
-        return  producto.product._id.toString() !== pid
+        return  producto.product?._id.toString() !== pid
       })
       cart.products.push({product: pid, quantity: cartProduct.quantity + quantity})
     } else {

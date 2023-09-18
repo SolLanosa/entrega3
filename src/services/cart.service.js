@@ -47,8 +47,8 @@ export default class CartService {
 
     async addProductToCart(cid, pid, user){
         const product = await this.productService.getProductById(pid);
-
-        if(user._id.toString() === product.owner?.toString()) {
+        
+        if(user._id?.toString() === product.owner?.toString()) {
             CustomError.createError({
                 name:"User own the product",
                 cause: 'Error',

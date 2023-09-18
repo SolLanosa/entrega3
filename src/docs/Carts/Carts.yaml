@@ -1,0 +1,227 @@
+paths:
+  /api/carts/:
+    get:
+      summary: "obtener todos los carritos"
+      tags:
+        - Carts
+      responses:
+        "200":
+          description: "devuelve los carritos"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#components/schemas/Cart"
+        "500":
+          description: "hubo un error"
+    post:
+      summary: "crear un carrito"
+      tags:
+        - Carts
+      responses:
+        "200":
+          description: "crea un carrito"
+          content:
+            application/json:
+              schema:
+                type: array
+        "500":
+          description: "hubo un error"
+  /api/carts/{cid}:
+    get:
+      summary: obtener el carrito por id
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: "parametro de ruta para identificar el carrito"
+          schema:
+            type: string
+      responses:
+        "200":
+          description: devuelve el carrito por id
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/Cart"
+        "500":
+          description: "hubo un error"
+    delete:
+      summary: "eliminar todos los productos del carrito"
+      tags:
+        - Carts
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: "parametro de ruta para identificar el carrito"
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "elimina todos los productos del carrito determinado"
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/Cart"
+        "500":
+          description: "hubo un error"
+    put:
+      summary: "actualizar el carrito por id"
+      tags:
+        - Carts
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: "parametro de ruta para identificar el usuario ha actualizar"
+          schema:
+            type: string
+      requestBody:
+        require: true
+        content:
+          application/json:
+            schema:
+              $ref: "#components/schemas/updateCart"
+      responses:
+        "200":
+          description: "carrito actualizado"
+        "500":
+          description: "hubo un error"
+
+  /api/carts/{cid}/product/{pid}:
+    post:
+      summary: "agregar producto al carrito"
+      tags:
+        - Carts
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: "parametro de ruta para identificar el carrito"
+          schema:
+            type: string
+        - name: pid
+          in: path
+          required: true
+          description: "parametro de ruta para identificar el producto"
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "agrega un producto al carrito"
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/Cart"
+        "500":
+          description: "hubo un error"
+  /api/carts/{cid}/products/{pid}:
+    delete:
+      summary: "eliminar un producto del carrito"
+      tags:
+        - Carts
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: "parametro de ruta para identificar el carrito"
+          schema:
+            type: string
+        - name: pid
+          in: path
+          required: true
+          description: "parametro de ruta para identificar el producto"
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "eliminar un producto del carrito"
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/Cart"
+        "500":
+          description: "hubo un error"
+    put:
+      summary: "actualiza la cantidad de ejemplares del producto por cualquier cantidad pasada en el carrito"
+      tags:
+        - Carts
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: "parametro de ruta para identificar el usuario ha actualizar"
+          schema:
+            type: string
+        - name: pid
+          in: path
+          required: true
+          description: "parametro de ruta para identificar el producto"
+          schema:
+            type: string
+      requestBody:
+        require: true
+        content:
+          application/json:
+            schema:
+              $ref: "#components/schemas/updateQuantityCart"
+      responses:
+        "200":
+          description: "cantidades del producto del carrito actualizado"
+        "500":
+          description: "hubo un error"
+
+components:
+  schemas:
+    Cart:
+      type: object
+      properties:
+        _id:
+          type: ObjectId
+          description: id autogenerado por mongo
+        products:
+          type: array
+          description: array de products
+      example:
+        _id: ObjectId("asdasdasd")
+        products:
+          [
+            {
+              "product": "648f9d06005fdda2f680b200",
+              "quantity": 2,
+              "_id": "649755f9a469706c9c697268",
+            },
+          ]
+    updateCart:
+      type: object
+      properties:
+        product:
+          type: object
+          description: objeto del producto
+      example: { "product": "648f9d06005fdda2f680b200", "quantity": 2 }
+    updateQuantityCart:
+      type: object
+      properties:
+        product:
+          type: object
+          description: objeto del producto
+      example: { "quantity": 2 }
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: Codercookie

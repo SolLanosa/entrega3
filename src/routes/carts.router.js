@@ -78,7 +78,7 @@ router.put('/:cid/products/:pid', passport.authenticate('session'), cartOwnerMid
   const quantity = req.body.quantity;
 
   try {
-    await cartController.addProductToCart(cid, pid, quantity)
+    await cartController.addProductToCart(cid, pid, req.session.user, quantity)
     res.send({ status: "success" });
   } catch(e) {
     next(e)
