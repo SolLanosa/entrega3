@@ -19,7 +19,7 @@ router.post('/', passport.authenticate('session'), rolesMiddleWareAdminOrPremium
     const product = req.body;
     const newProduct = await productController.createProduct(product, req.session.user);
     req.socketServer.sockets.emit('productAdded', newProduct )
-    res.send({ status: "success" });
+    res.send({ product: newProduct });
   }
   catch (e) {
     console.log(e)
