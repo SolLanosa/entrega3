@@ -85,4 +85,11 @@ router.get('/recoverPassword', (req,res) => {
   res.render('recoverPassword')
 })
 
+
+router.get('/user/uploadDocuments', (req,res) => {
+  const user = req.session.user;
+  res.render('uploadDocuments', {
+    user
+  })
+})
 export default router;

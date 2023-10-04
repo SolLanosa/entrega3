@@ -18,6 +18,7 @@ router.post("/login", passport.authenticate('login', {failureRedirect: '/faillog
     if(!req.user) return res.status(400).send({status: 'error', error:'invalid credentials'})
     req.session.user = req.user
     const dto = new UserDTO(req.user)
+    await sessionController.updateLastConnection(email)
     res.send({ status: "success", payload:dto });
 });
 
@@ -40,10 +41,12 @@ router.get('/githubcallback', passport.authenticate('github', {failureRedirect:'
 })
 
 router.get('/logout', (req, res) => {
-  req.session.destroy(err => {
+  const {email} = req.body;
+  req.session.destroy(async (err) => {
     if (err) {
       return res.json({status: 'logout error', body: err})
     }
+    await sessionController.updateLastConnection(email)
     res.send('Logout ok!')
   })
 })

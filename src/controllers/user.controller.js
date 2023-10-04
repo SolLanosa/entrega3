@@ -18,4 +18,16 @@ export default class UserController {
     }
       await this.userService.changeRole(uid,role)
    }
+
+   async uploadDocuments(uid, files) {
+    if(!files){
+        CustomError.createError({
+            name: "Documents upload errror",
+            cause: "Image couldnt be saved",
+            message: "Error trying uploading documents",
+            code: EErrors.GENERIC_ERROR,
+        })
+       }
+    await this.userService.uploadDocuments(uid, files)
+   }
 }

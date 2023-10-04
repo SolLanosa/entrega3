@@ -2,6 +2,7 @@ import express from 'express';
 import UserController from '../controllers/user.controller.js'
 import { rolesMiddleWareAdmin } from './middlewares/roles.middelware.js';
 import passport from 'passport';
+import { uploader } from '../utils.js';
 const router = express.Router();
 const userController = new UserController();
 
@@ -16,5 +17,18 @@ router.post('/premium/:uid',passport.authenticate('session'), rolesMiddleWareAdm
         next(e)
     }
 })
+
+router.post('/:uid/documents', uploader('documents').fields([{name:"identificacion", maxCount: 1},{name:"domicilio", maxCount: 1},{name:"estado de cuenta", maxCount: 1}]), async (req, res, next) => {
+    try {
+        const uid = req.params.uid;
+        const files = req.files
+        console.log(files)
+        await userController.uploadDocuments(uid, files)
+        res.send({ status: "success" });
+    } catch(e) {
+        next(e)
+    }
+} )
+
 
 export default router

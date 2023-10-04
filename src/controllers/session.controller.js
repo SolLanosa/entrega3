@@ -12,4 +12,8 @@ export default class SessionController {
    async recoverPassword(password, token) {
        await this.sessionService.recoverPassword(password, token)
     }
+
+    async updateLastConnection(email) {
+        await this.sessionService.updateLastConnection(email);
+    }
 }

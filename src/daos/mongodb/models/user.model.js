@@ -18,6 +18,13 @@ const schema = new mongoose.Schema({
         unique: true
     },
     recoverPasswordExpirationDate: Date,
+    documents: [
+        {
+        name: String,
+        reference: String
+        }
+    ],
+    last_connection: Date
 })
 
 const userModel = mongoose.model(collection, schema)

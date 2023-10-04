@@ -105,5 +105,12 @@ export default class SessionService {
         await this.userDao.updatePassword(user._id, newHashedPassword)
     }
 
+    async updateLastConnection(email) {
+        const user = await this.userDao.findByEmail(email);
+        if(!user) return null
+        user.last_connection = new Date
+        user.save();
+    }
+
 
 }

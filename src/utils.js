@@ -2,6 +2,8 @@ import {fileURLToPath} from 'url';
 import { dirname } from 'path';
 import bcrypt from 'bcrypt'
 import { faker } from "@faker-js/faker"
+import multer from 'multer';
+import mime from 'mime-types';
 
 export const createHash =(password) => bcrypt.hashSync(password,bcrypt.genSaltSync(10));
 export const isValidPassword = (hashedPassword, password) =>bcrypt.compareSync(password,hashedPassword);
@@ -24,3 +26,22 @@ export const generateProduct = () => {
         status: true
     }
 }
+
+const storage = (destination) => multer.diskStorage({
+  destination: function(req, file, cb){
+      let destinationPath = `/public/${destination}`
+      cb(null, __dirname+destinationPath);
+    },
+
+  filename: function(req, file, cb){
+      cb(null, Date.now() + "-" + `${file.fieldname}.${mime.extension(file.mimetype)}` )
+  }
+})
+
+export const uploader = (destination) => multer({
+  storage: storage(destination),
+  onError: function (err, next) {
+    console.log(err);
+    next();
+  },
+});

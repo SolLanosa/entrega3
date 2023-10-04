@@ -5,6 +5,10 @@ export default class UserDAO {
         return userModel.findOne({email})
     }
 
+    async findById(id){
+        return userModel.findById(id)
+    }
+
     async findByFirstName(firstName) {
         return userModel.findeOne({firstName})
     }

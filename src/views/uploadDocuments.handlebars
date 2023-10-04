@@ -1,0 +1,10 @@
+<div>
+    <h1>Subir tus documentos</h1>
+    <form action="" enctype="multipart/form-data" method="POST">
+        <input type="file" name="identificacion" id="identificacion">
+        <input type="file" name="domicilio" id="domicilio">
+        <input type="file" name="estado de cuenta" id="estadoDeCuenta">
+        <button onclick="event.preventDefault(); uploadDocuments('{{user._id}}')">Send file</button>
+    </form>
+</div>
+<script src="/js/uploadDocuments.js"></script>
