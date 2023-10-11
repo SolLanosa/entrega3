@@ -1,0 +1,25 @@
+<div class="container-user">
+    <h1>USER ADMINISTRATOR</h1>
+      {{#each users}}
+      <div class="container-admin">
+        <p>Name: {{this.first_name}}</p>
+        <p>Last name: {{this.last_name}}</p>
+        <div class="container-role">
+            <p>Role: {{this.role}}</p>
+            <button onclick="event.preventDefault(); changeRole('{{this._id}}')">CHANGE USER'S ROLE</button>
+        </div>
+        <button onclick="event.preventDefault(); deleteUser('{{this._id}}')"  class="button-delete">DELETE USER</button>
+      </div>
+      {{/each}}
+      <div class="container-page">
+    {{#if prev}}
+      <a href="user?page={{prev}}"><i class='bx bxs-left-arrow bx-sm'></i></a>
+    {{/if}}
+    <span>{{page}}/{{totalPages}}</span>
+    {{#if next}}
+      <a href="user?page={{next}}"><i class='bx bxs-right-arrow bx-sm'></i></a>
+    {{/if}}
+  </div>
+</div>
+<script src="/js/deleteUser.js"></script>
+<script src="/js/changeRole.js"></script>

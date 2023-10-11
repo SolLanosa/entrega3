@@ -61,7 +61,7 @@ router.post('/recoverPassword', async(req,res, next)=>{
  try {
   const {password, token} = req.body;
   if(!password|| !token) return res.status(400).send({status:"error",error:"Incomplete Values"});
- await sessionController.recoverPassword(password, token)
+  await sessionController.recoverPassword(password, token)
   res.send({status:"success",message:"Contraseña restaurada"});
  } catch(e) {
   next(e)

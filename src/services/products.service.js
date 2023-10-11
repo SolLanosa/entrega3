@@ -1,10 +1,12 @@
 import ProductDao from "../daos/mongodb/ProductDAO.js"
 import { CustomError } from "./errors/CustomError.js"
 import EErrors from "./errors/enums.js"
+import UserService from "./user.service.js"
 
 export default class ProductService{
     constructor(){
         this.productDao = new ProductDao()
+        this.userService = new UserService()
     }
 
     async createProduct(product, user){
@@ -44,6 +46,7 @@ export default class ProductService{
   
     async deleteProduct(id, user) {
       const product = await this.getProductById(id);
+      
       if(user.role !== 'admin' && product.owner?.toString() !== user._id.toString()) {
         CustomError.createError({
           name:"Not the owner",
@@ -52,7 +55,11 @@ export default class ProductService{
           code: EErrors.GENERIC_ERROR
       })
       }
-      const result = await this.productDao.deleteProduct(id)
+      const result = await this.productDao.deleteProduct(id);
+      const owner = product.owner.toString();
+      if (owner !== "admin") {
+        await this.userService.notifyDeletedProduct(owner, product.title)
+      } 
       return result
     }
 }

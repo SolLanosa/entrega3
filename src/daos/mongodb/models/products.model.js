@@ -36,7 +36,7 @@ const ProductsSchema = new mongoose.Schema({
     required: true,
   },
   owner: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.Mixed,
     default: 'admin'
   }
 })

@@ -22,7 +22,7 @@ export default class UserDAO {
     }
 
     async setRecoverToken(email, token, expirationDate) {
-        return userModel.updateOne({email }, {$set: {recoverPasswordToken: token, recoverPasswordExpirationDate: expirationDate}})
+        return userModel.updateOne({email}, {$set: {recoverPasswordToken: token, recoverPasswordExpirationDate: expirationDate}})
     }
 
     async findByRecoverPasswordToken(recoverPasswordToken) {
@@ -31,5 +31,22 @@ export default class UserDAO {
 
     async changeRole(uid, role) {
         return userModel.updateOne({_id: uid}, {role})
+    }
+
+    async getUsers(limit = 10, page = 1) {
+        let users = await userModel.paginate({}, {limit: limit, page: page})
+        return users
+    }
+
+    async getInactiveUsers(time) {
+        return userModel.find({deleted: false, last_connection: {$lte:new Date(Date.now() - time)} })
+    }
+
+    async deleteInactiveUsers(filteredUsers) {
+        return userModel.updateMany({ _id: {$in: filteredUsers.map(user => user.id)}}, {$set: {deleted: true}})
+    }
+
+    async deleteUser(uid) {
+        return userModel.updateOne({_id:uid}, {$set: {deleted: true}});
     }
 }

@@ -26,4 +26,28 @@ export default class MailService {
             </div>`
        })
     }
+
+    async sendMailToInactiveUserAccount(email) {
+        await this.transport.sendMail({
+            from: 'coder tests <coderecomerce@gmail.com>',
+            to: email,
+            subject: 'Cuenta inhabilitada',
+            html: `
+            <div>
+                <p>Su cuenta ha sido inhabilitada por falta de uso</p>
+            </div>`
+       })
+    }
+
+    async sendMailDeletedProductPremium(email, productName) {
+        await this.transport.sendMail({
+            from: 'coder tests <coderecomerce@gmail.com>',
+            to: email,
+            subject: 'Producto eliminado',
+            html: `
+            <div>
+                <p>El producto: ${productName} que publicaste fue eliminado.</p>
+            </div>`
+       })
+    }
 }

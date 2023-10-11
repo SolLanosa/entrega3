@@ -34,7 +34,7 @@ const storage = (destination) => multer.diskStorage({
     },
 
   filename: function(req, file, cb){
-      cb(null, Date.now() + "-" + `${file.fieldname}.${mime.extension(file.mimetype)}` )
+      cb(null, `${file.fieldname}.${mime.extension(file.mimetype)}` )
   }
 })
 

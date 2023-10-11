@@ -1,9 +1,12 @@
 import express from 'express';
 import ProductManager from '../daos/mongodb/ProductDAO.js';
+import UserDAO from '../daos/mongodb/UserDAO.js';
 import CartDAO from '../daos/mongodb/CartDAO.js';
-
+import { rolesMiddleWareAdmin } from './middlewares/roles.middelware.js';
+import passport from 'passport';
 const router = express.Router();
 const productManager = new ProductManager();
+const userManager = new UserDAO()
 const cartManager = new CartDAO();
 
 router.get('/realtimeproducts', async (req, res) => {
@@ -92,4 +95,21 @@ router.get('/user/uploadDocuments', (req,res) => {
     user
   })
 })
+
+
+router.get('/user', passport.authenticate('session'), rolesMiddleWareAdmin, async (req,res) => {
+  let page = Number(req.query.page)  || 1;
+  const users = await userManager.getUsers(10, page)
+  
+  res.render('userAdmin', {
+    prev: users.prevPage,
+    next: users.nextPage,
+    page: users.page,
+    totalPages: users.totalPages,
+    users: JSON.parse(JSON.stringify(users.docs)),
+    style: 'userAdmin.css'
+  })
+})
+
+
 export default router;

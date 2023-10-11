@@ -1,0 +1,31 @@
+.container-admin {
+    display: flex;
+    justify-content: center;
+    max-width: 450px;
+    flex-direction: column;
+    border: 1px solid black;
+    padding: 10px 20px;
+    margin: 20px auto;
+}
+
+h1 {
+    text-align: center;
+}
+.container-role {
+    display: flex;
+    align-items: center;
+}
+
+.container-role button {
+    max-width: 200px;
+    height: 20px;
+    margin-left: 20px;
+}
+
+
+.button-delete {
+    max-width: 250px;
+    align-self: center;
+    margin: 20px;
+    background-color: red;
+}

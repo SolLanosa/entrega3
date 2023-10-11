@@ -1,6 +1,7 @@
 import { CustomError } from "../services/errors/CustomError.js";
 import EErrors from "../services/errors/enums.js";
 import UserService from "../services/user.service.js";
+import {UserDTO} from '../controllers/DTO/user.dto.js'
 
 export default class UserController {
     constructor() {
@@ -29,5 +30,31 @@ export default class UserController {
         })
        }
     await this.userService.uploadDocuments(uid, files)
+   }
+
+   async getUsers(req) {
+        let limit = Number(req.query.limit) || 10;
+        let page = Number(req.query.page)  || 1;
+        const result = await this.userService.getUsers(limit, page)
+        result.docs = result.docs.map(u => new UserDTO(u));
+        return result
+   }
+
+   async deleteInactiveUsers() {
+        const result = await this.userService.deleteInactiveUsers()
+        return result
+   }
+
+   async deleteUser(uid) {
+    if(!uid) {
+        CustomError.createError({
+            name: "Missing id",
+            cause: generateMissingId(id),
+            message: "Error trying to delete user because id is missing",
+            code: EErrors.NOT_FOUND,
+        })
+    }
+    const result = await this.userService.deleteUser(uid)
+    return result
    }
 }

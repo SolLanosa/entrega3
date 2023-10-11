@@ -1,8 +1,8 @@
 import mongoose from 'mongoose'
-
+import mongoosePaginate from 'mongoose-paginate-v2'
 const collection = 'users'
 
-const schema = new mongoose.Schema({
+const UserSchema = new mongoose.Schema({
     first_name: String,
     last_name: String,
     email: String,
@@ -24,8 +24,13 @@ const schema = new mongoose.Schema({
         reference: String
         }
     ],
-    last_connection: Date
+    last_connection: Date,
+    deleted: {
+        type: Boolean,
+        default: false
+    }
 })
 
-const userModel = mongoose.model(collection, schema)
+UserSchema.plugin(mongoosePaginate)
+const userModel = mongoose.model(collection, UserSchema)
 export default userModel
