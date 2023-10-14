@@ -1,9 +1,13 @@
-async function changeRole(uid) {  
+async function changeRole(uid, isPremium) {  
     try {
       await fetch(`http://localhost:8080/api/users/premium/${uid}`, {
         method: 'POST',
-        body:"premium"
+        body: JSON.stringify({role: isPremium ?  "user" : "premium" }),
+        headers:{
+          'Content-Type':'application/json'
+      }
       })
+      window.location.reload();
     } catch (e) {
       console.log('error', e)
     }

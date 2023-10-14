@@ -35,12 +35,14 @@ router.get('/products', async (req, res) => {
   const products = await productManager.getProducts(10, page)
   const user = req.session.user;
   if (!user) return res.redirect('/login')
+  const isNotAdmin = user.role !== 'admin'
   res.render('products', {
-    products: JSON.parse(JSON.stringify(products.docs)),
+    products: JSON.parse(JSON.stringify(products.docs)).map(p => ({...p, canAddToCart:isNotAdmin })),
     prev: products.prevPage,
     next: products.nextPage,
     page: products.page,
     totalPages: products.totalPages,
+    isNotAdmin,
     user,
     style: 'products.css',
   })
@@ -50,11 +52,10 @@ router.get('/products/:pid', async (req, res) => {
   const pid = req.params.pid;
   const product = await productManager.getProductById(pid);
   const user = req.session.user;
-
-
   if (!user) return res.redirect('/login')
   res.render('product', {
     product: JSON.parse(JSON.stringify(product)),
+    isNotAdmin: user.role !== 'admin',
     user,
     style: 'product.css'
   })
@@ -66,18 +67,25 @@ router.get('/carts/:cid', async (req, res) => {
   const cart = await cartManager.getCartById(cid)
   const products = cart.products
   res.render('carts', {
-    products: JSON.parse(JSON.stringify(products)),
+    products: JSON.parse(JSON.stringify(products)).map(p => ({...p, cart: cid})),
     cart: cid,
     style: 'carts.css'
   })
 })
 
 router.get('/register', (req, res) => {
+  const user = req.session.user;
+  if (user) return res.redirect('/products')
   res.render('register');
 })
 
 router.get('/login', (req, res) => {
-  res.render('login');
+  const user = req.session.user;
+  if (user) return res.redirect('/products')
+  res.render('login', {
+    failed: req.query.failed === 'true',  
+    style: 'login.css'
+  })
 })
 
 router.get('/restartPassword',(req,res)=>{
@@ -91,6 +99,7 @@ router.get('/recoverPassword', (req,res) => {
 
 router.get('/user/uploadDocuments', (req,res) => {
   const user = req.session.user;
+  if (!user) return res.redirect('/login')
   res.render('uploadDocuments', {
     user
   })
@@ -106,7 +115,7 @@ router.get('/user', passport.authenticate('session'), rolesMiddleWareAdmin, asyn
     next: users.nextPage,
     page: users.page,
     totalPages: users.totalPages,
-    users: JSON.parse(JSON.stringify(users.docs)),
+    users:users.docs.map(user => ({...user._doc, isPremium: user.role === 'premium'})),
     style: 'userAdmin.css'
   })
 })

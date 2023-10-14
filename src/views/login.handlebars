@@ -3,10 +3,14 @@
     <form id="loginForm">
         <label>Email</label>
         <input name="email">
+      
         <br/>
         <label>Contraseña</label>
         <input type="password" name="password">
         <input type="submit">
+          {{#if failed}}
+            <p class="failed-login">Login failed: invalid credentials</p>
+          {{/if}}
     </form>
     <p>¿No estás registrado? <a href="/register">Regístrate aquí</a></p>
     <p>¿Olvidaste tu contraseña? <a href="/restartPassword">Restáurala aquí!</a></p>

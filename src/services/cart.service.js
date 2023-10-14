@@ -45,7 +45,7 @@ export default class CartService {
         return result
     }
 
-    async addProductToCart(cid, pid, user){
+    async addProductToCart(cid, pid, user, quantity){
         const product = await this.productService.getProductById(pid);
         
         if(user._id?.toString() === product.owner?.toString()) {
@@ -58,13 +58,14 @@ export default class CartService {
         }
 
         const cart = await this.getCartById(cid)
-        await this.cartRepository.addProductToCart(cart._id.toString(), product._id.toString());
+        await this.cartRepository.addProductToCart(cart._id.toString(), product._id.toString(), quantity);
     }
 
     async deleteProductFromCart(cid, pid) {
         const product = await this.productService.getProductById(pid);
         const cart = await this.getCartById(cid)
-        if(!cart.products.find(p => p.product._id === pid)) {
+        console.log(cart.products)
+        if(!cart.products.find(p => p.product._id.toString() === pid)) {
             CustomError.createError({
                 name:"Cart fetch error",
                 cause: 'Error',

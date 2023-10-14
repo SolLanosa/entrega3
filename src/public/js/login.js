@@ -14,6 +14,11 @@ form.addEventListener('submit',e=>{
     }).then(result => {
         if(result.status===200){
           window.location.replace('/products');
+        } else {
+            window.location.replace('/login?failed=true');
         }
-    })
+    }).catch(() => {
+        window.location.replace('/login?failed=true');
+        }
+    )
 })

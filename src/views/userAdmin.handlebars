@@ -1,12 +1,13 @@
 <div class="container-user">
     <h1>USER ADMINISTRATOR</h1>
+    <a class="volver-button" href="/products">Volver</a>
       {{#each users}}
       <div class="container-admin">
         <p>Name: {{this.first_name}}</p>
         <p>Last name: {{this.last_name}}</p>
         <div class="container-role">
             <p>Role: {{this.role}}</p>
-            <button onclick="event.preventDefault(); changeRole('{{this._id}}')">CHANGE USER'S ROLE</button>
+            <button onclick="event.preventDefault(); changeRole('{{this._id}}', {{this.isPremium}})">CHANGE USER'S ROLE</button>
         </div>
         <button onclick="event.preventDefault(); deleteUser('{{this._id}}')"  class="button-delete">DELETE USER</button>
       </div>

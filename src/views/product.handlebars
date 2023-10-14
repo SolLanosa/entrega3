@@ -8,11 +8,12 @@
   </div>
   <div class="button-container">
     <a class="volver-button" href="/products">Volver</a>
+    {{#if isNotAdmin}}
     <button class="add-to-cart-button"  onclick="addProduct('{{user.cart}}', '{{product._id}}')">
           Agregar producto
           <i class='bx bxs-cart-alt bx-sm'></i>
-        </button>
-    
+    </button>
+    {{/if}}
   </div>
 </div>
 <script src="/js/products.js"></script>

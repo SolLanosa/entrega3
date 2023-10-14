@@ -2,18 +2,26 @@
   <h1 class="title">Productos</h1>
   <button class="logout" onclick="logout()">Logut</button>
   <h2>Bienvenido {{user.first_name}} {{user.last_name}} {{user.name}}</h2>
-  <a class="carrito-button"  href="/carts/{{user.cart}}">Ver carrito <i class='bx bxs-cart-alt bx-sm'></i></a>
+    {{#if isNotAdmin}}
+      <a class="carrito-usuarios"  href="/user/uploadDocuments">Cargar documentos</a>
+    {{else}}
+      <a class="carrito-usuarios"  href="/user">Visualizar usuarios</a>
+    {{/if}}
+  {{#if isNotAdmin}}
+    <a class="carrito-button"  href="/carts/{{user.cart}}">Ver carrito <i class='bx bxs-cart-alt bx-sm'></i></a>
+  {{/if}}
   <div class="container-products">
       {{#each products}}
         <a class="container-card" href="/products/{{this._id}}">
           <img src={{this.thumbnails}} alt="">
           <h3>{{this.title}}</h3>
           <div class="container-price-cart">
-            <span>$ {{this.price}}</span>
-            
+          <span>$ {{this.price}}</span>
+          {{#if this.canAddToCart}}
             <button id="button-cart" class="add-to-cart" onclick="event.preventDefault(); addProduct('{{../user.cart}}', '{{this._id}}')">
               <i class='bx bxs-cart-alt bx-sm'></i>
             </button>
+          {{/if}}
           </div>
         </a>
       {{/each}}

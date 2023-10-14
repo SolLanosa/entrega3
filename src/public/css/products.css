@@ -124,3 +124,17 @@ h2 {
 .container-page a {
   cursor: pointer;
 }
+
+.carrito-usuarios {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px auto;
+  border: 1px solid black;
+  width: 240px;
+  height: 40px;
+  border-radius: 20px;
+  color: black;
+  font-size: 18px;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}

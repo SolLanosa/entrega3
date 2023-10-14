@@ -18,8 +18,8 @@ export default class CartRepository {
         return this.cartDao.getAllCarts()
     }
 
-    async addProductToCart(cid, pid) {
-        await this.cartDao.addProductToCart(cid, pid)
+    async addProductToCart(cid, pid, quantity) {
+        await this.cartDao.addProductToCart(cid, pid, quantity)
     }
 
     async deleteProductFromCart(cid, pid) {
@@ -27,7 +27,7 @@ export default class CartRepository {
     }
 
     async deleteAllProductsFromCart(cid) {
-        await this.cartDao.deleteAllProductsFromCar(cid)
+        await this.cartDao.deleteAllProductsFromCart(cid)
     }
     async updateCart(cid, productos) {
         await this.cartDao.updateCart(cid, productos)
