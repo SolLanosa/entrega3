@@ -8,5 +8,6 @@ export const CONFIG = {
     ENVIRONMENT: process.env.ENVIRONMENT,
     MAILER_EMAIL: process.env.MAILER_EMAIL,
     MAILER_PASSWORD: process.env.MAILER_PASSWORD,
-    REDIRECT_BASE_URL: process.env.REDIRECT_BASE_URL
+    REDIRECT_BASE_URL: process.env.REDIRECT_BASE_URL,
+    PORT: process.env.PORT
 }

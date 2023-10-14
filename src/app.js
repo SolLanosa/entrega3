@@ -41,7 +41,7 @@ const messageManager = new MessageManager()
 
 const app = express();
 
-const httpServer = app.listen(8080, () => {
+const httpServer = app.listen(CONFIG.PORT || 8080, () => {
   console.log("servidor levantado");
 });
 
