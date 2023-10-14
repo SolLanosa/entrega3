@@ -14,8 +14,7 @@ const UserSchema = new mongoose.Schema({
         ref: 'carts'
     },
     recoverPasswordToken: {
-        type: String,  
-        unique: true
+        type: String,
     },
     recoverPasswordExpirationDate: Date,
     documents: [

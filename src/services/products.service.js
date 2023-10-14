@@ -30,9 +30,9 @@ export default class ProductService{
         return result
     }
 
-    async updateProduct(id, updatedProduct, user) {
+    async updateProduct(id, updatedProduct, user, skipOwnerValidation) {
       const product = await this.getProductById(id);
-      if(user.role !== 'admin' && product.owner.toString() !== user._id.toString()) {
+      if(!skipOwnerValidation && user.role !== 'admin' && product.owner.toString() !== user._id.toString()) {
           CustomError.createError({
             name:"Not the owner",
             cause: 'Not the owner',

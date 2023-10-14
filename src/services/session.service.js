@@ -48,7 +48,7 @@ export default class SessionService {
     }
 
     async loginWithGithub(profile) {
-        let user = await this.userDao.findByFirstName({first_name: profile._json.name})
+        let user = await this.userDao.findByEmail(profile.profileUrl)
         if (!user){
             let newUser = {
                 first_name: profile._json.name,
@@ -58,10 +58,10 @@ export default class SessionService {
                 password: '',
                 role: 'user'
             }
-            const savedUser = await this.userDao.createUser(newUser);
+            const savedUser = await this.register(newUser);
             return savedUser;
         } 
-        return null
+        return user
     }
 
     async restartPassword(email) {

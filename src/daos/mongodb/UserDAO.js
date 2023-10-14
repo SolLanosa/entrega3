@@ -10,7 +10,7 @@ export default class UserDAO {
     }
 
     async findByFirstName(firstName) {
-        return userModel.findeOne({firstName})
+        return userModel.findOne({firstName})
     }
 
     async createUser(user) {

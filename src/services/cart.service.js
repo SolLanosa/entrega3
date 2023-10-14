@@ -98,7 +98,7 @@ export default class CartService {
         const cart = await this.getCartById(cid)
         const validatedProducts = await Promise.all(cart.products.map(async (p) => {
             if(p.quantity <= p.product.stock) {
-                await this.productService.updateProduct(p.product._id,{ stock: p.product.stock - p.quantity })
+                await this.productService.updateProduct(p.product._id,{ stock: p.product.stock - p.quantity }, user, true)
                 return {product: p, enoughStock:true}
             } 
             return {product: p, enoughStock:false}

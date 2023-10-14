@@ -1,7 +1,7 @@
 import EErrors from "../errors/enums.js";
 
 export const errorMiddleware = (error, req, res, next) => {
-  req.logger?.error({route: req.path, body: req.body, params: req.params, error})
+  req.logger?.error({route: req.path, body: req.body, params: req.params, error: error.stack})
   switch (error.code) {
     case EErrors.INVALID_TYPES_ERROR: 
     case EErrors.DATABASE_ERROR:
@@ -19,5 +19,4 @@ export const errorMiddleware = (error, req, res, next) => {
       res.status(500).send({ status: "error", mensaje: "error no manejado" });
       break;
   }
-  console.log(error, 'ERROR')
 };

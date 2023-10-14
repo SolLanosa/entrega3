@@ -77,6 +77,8 @@ export default class UserService {
 
     async deleteUser(uid) {
         const result = await this.userDAO.deleteUser(uid);
+        const user = await this.userDAO.findById(uid)
+        if (user) await this.mailService.sendMailToDeletedUserAccount(user.email)
         return result
     }
 

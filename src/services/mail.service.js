@@ -39,6 +39,19 @@ export default class MailService {
        })
     }
 
+
+    async sendMailToDeletedUserAccount(email) {
+        await this.transport.sendMail({
+            from: 'coder tests <coderecomerce@gmail.com>',
+            to: email,
+            subject: 'Cuenta inhabilitada',
+            html: `
+            <div>
+                <p>Su cuenta ha sido inhabilitada</p>
+            </div>`
+       })
+    }
+
     async sendMailDeletedProductPremium(email, productName) {
         await this.transport.sendMail({
             from: 'coder tests <coderecomerce@gmail.com>',

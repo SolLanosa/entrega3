@@ -38,7 +38,8 @@ export const initializePassport = () => {
         callbackURL: CONFIG.CALLBACK_URL
     }, async (accessToken, refreshToken, profile, done) => {
         try {
-            const user = userService.loginWithGithub(profile)
+            const user = await sessionService.loginWithGithub(profile)
+            console.log(user, 'USER')
             done(null, user || false);
         }catch (error) {
             return done(error);
