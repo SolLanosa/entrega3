@@ -6,7 +6,8 @@
   "main": "ProductManager.js",
   "scripts": {
     "test": "mocha -r dotenv/config test",
-    "start": "nodemon --ignore '*.json' src/app.js"
+    "dev": "nodemon --ignore '*.json' src/app.js",
+    "start": "node src/app.js"
   },
   "keywords": [],
   "author": "",
