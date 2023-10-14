@@ -1,6 +1,6 @@
 async function changeRole(uid, isPremium) {  
     try {
-      await fetch(`http://localhost:8080/api/users/premium/${uid}`, {
+      await fetch(`/api/users/premium/${uid}`, {
         method: 'POST',
         body: JSON.stringify({role: isPremium ?  "user" : "premium" }),
         headers:{

@@ -1,6 +1,6 @@
 async function addProduct(cid, id) {
   try {
-    await fetch(`http://localhost:8080/api/carts/${cid}/product/${id}`, {
+    await fetch(`/api/carts/${cid}/product/${id}`, {
       method: 'POST'
     })
   } catch (e) {

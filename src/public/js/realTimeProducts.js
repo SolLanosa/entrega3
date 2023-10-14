@@ -4,7 +4,7 @@ const productList = document.getElementById("productsList")
 const form = document.getElementById("form")
 
 const onDeleteProduct = async (id) => {
-  await fetch(`http://localhost:8080/api/products/${id}`, {
+  await fetch(`/api/products/${id}`, {
     method: 'DELETE'
   })
 }
@@ -65,7 +65,7 @@ form.addEventListener('submit', async function(e) {
     status: inputStatus.value === 'true'
   }
 
-  await fetch(`http://localhost:8080/api/products`, {
+  await fetch(`/api/products`, {
       method: 'POST',
       body: JSON.stringify(producto),
       headers: {'Accept': 'application/json', 'Content-Type': 'application/json' }

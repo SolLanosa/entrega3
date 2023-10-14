@@ -10,7 +10,7 @@ async function uploadDocuments(uid) {
   formData.append(estadoDeCuentaInput.name, estadoDeCuentaInput.files[0])
 
     try {
-      await fetch(`http://localhost:8080/api/users/${uid}/documents`, {
+      await fetch(`/api/users/${uid}/documents`, {
         method: 'POST',
         body: formData
       })
