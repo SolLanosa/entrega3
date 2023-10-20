@@ -78,7 +78,10 @@ export default class UserService {
     async deleteUser(uid) {
         const result = await this.userDAO.deleteUser(uid);
         const user = await this.userDAO.findById(uid)
-        if (user) await this.mailService.sendMailToDeletedUserAccount(user.email)
+
+        const regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+        const isValidEmail = regex.test(user.email)
+        if (user && isValidEmail) await this.mailService.sendMailToDeletedUserAccount(user.email)
         return result
     }
 

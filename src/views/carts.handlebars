@@ -11,8 +11,10 @@
       
       {{/each}}
   </div>
-  <button onclick="endPurchase('{{cart}}')">FINALIZAR COMPRA</button>
-  <button onclick="emptyCart('{{cart}}')">Vaciar carrito</button>
+  {{#if isNotEmpty}}
+    <button onclick="endPurchase('{{cart}}')">FINALIZAR COMPRA</button>
+    <button onclick="emptyCart('{{cart}}')">Vaciar carrito</button>
+  {{/if}}
   <a class="volver" href="/products">volver</a>
 </div>
 <script src="/js/cart.js"></script>

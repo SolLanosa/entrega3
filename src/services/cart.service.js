@@ -104,12 +104,22 @@ export default class CartService {
             return {product: p, enoughStock:false}
         }))
 
-        const boughtProducts = validatedProducts.filter(p=> p.enoughStock)
-        const missingProducts = validatedProducts.filter(p=> !p.enoughStock)
-
-        this.updateCart(cid, missingProducts.map(p => p.product))
-        this.ticketService.createTicket(boughtProducts.map(p => p.product), user.email)
-        return missingProducts.map(p=>p.product._id)
+        if (validatedProducts.length > 0) {
+            console.log('entra')
+            const boughtProducts = validatedProducts.filter(p=> p.enoughStock)
+            const missingProducts = validatedProducts.filter(p=> !p.enoughStock)
+    
+            this.updateCart(cid, missingProducts.map(p => p.product))
+            this.ticketService.createTicket(boughtProducts.map(p => p.product), user.email)
+            return missingProducts.map(p=>p.product._id)
+        } else {
+            return CustomError.createError({
+                name:"Cart is empty",
+                cause: 'Error',
+                message: "El carrito esta vacio no hay nada para comprar",
+                code: EErrors.NOT_FOUND
+            })
+        }
     }
 
  }

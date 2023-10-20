@@ -66,8 +66,10 @@ router.get('/carts/:cid', async (req, res) => {
   const cid = req.params.cid;
   const cart = await cartManager.getCartById(cid)
   const products = cart.products
+  const isNotEmpty = products.length > 0;
   res.render('carts', {
     products: JSON.parse(JSON.stringify(products)).map(p => ({...p, cart: cid})),
+    isNotEmpty,
     cart: cid,
     style: 'carts.css'
   })
