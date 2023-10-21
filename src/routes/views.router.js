@@ -62,8 +62,11 @@ router.get('/products/:pid', async (req, res) => {
 })
 
 
-router.get('/carts/:cid', async (req, res) => {
+router.get('/carts/:cid', passport.authenticate('session'), async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.redirect('/login')
   const cid = req.params.cid;
+  if (user.cart !== cid) return res.redirect ('/products')
   const cart = await cartManager.getCartById(cid)
   const products = cart.products
   const isNotEmpty = products.length > 0;
@@ -99,7 +102,7 @@ router.get('/recoverPassword', (req,res) => {
 })
 
 
-router.get('/user/uploadDocuments', (req,res) => {
+router.get('/user/uploadDocuments', passport.authenticate('session'), (req,res) => {
   const user = req.session.user;
   if (!user) return res.redirect('/login')
   res.render('uploadDocuments', {
