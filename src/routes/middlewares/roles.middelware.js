@@ -18,6 +18,6 @@ export const rolesMiddleWareAdminOrPremium = (req, res, next) => {
     if(req.user?.role === 'admin' || req.user?.role === 'premium') {
         next()
     } else {
-        res.send({error: `you don't have access`});
+        res.status(403).send({error: `you don't have access`});
     }
 }
